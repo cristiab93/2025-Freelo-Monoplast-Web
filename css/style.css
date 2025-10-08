@@ -1,0 +1,532 @@
+@font-face {
+    font-family: 'kentoregular';
+    src: url('../fonts/kento_regular-webfont.woff2') format('woff2'),
+         url('../fonts/kento_regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+html,
+body {
+    position: relative;
+    height: 100%;
+}
+
+body {
+    font-family: "Urbanist", sans-serif;
+    font-weight: 300;
+}
+
+.kento {font-family: 'kentoregular';}
+
+.text-justify {text-align: justify;}
+
+.gx-6 {--bs-gutter-x: 4rem;}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.mySwiper .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.logo-nosotros
+ {
+    min-width: 340px;
+}
+
+.bg-about {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-image: url(../img/bg-nosotros.jpg);
+}
+
+.bg-slide-1 {
+    background-image: url(../img/bg-slide-1.jpg);
+}
+
+.bg-slide-2 {
+    background-image: url(../img/bg-slide-2.jpg);
+}
+
+.bg-slide-3 {
+    background-image: url(../img/bg-slide-3.jpg);
+}
+
+a.nav-link {
+    padding: 10px 20px !important;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.multiply {
+    mix-blend-mode: multiply;
+}
+
+.navbar-nav {
+    background-color: color(srgb 0 0 0 / 0.20);
+    border-radius: 30px;
+}
+
+.nav-interna {background-color: #ECECEC;}
+
+.nav-interna  a.nav-link {color: #2B2965;}
+
+h1 {
+    font-size: 59px;
+    line-height: 61px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+h2 {
+    font-size: 52px;
+    font-weight: 400;
+    color: #FFFFFF;
+    line-height: 56px;
+    letter-spacing: 1px;
+}
+
+h3 {
+    font-size: 26px;
+    line-height: 28px;
+}
+
+h4 {
+    font-size: 45px;
+    line-height: 47px;
+}
+
+p {
+    letter-spacing: 0.75px;
+}
+
+.font11 {
+    font-size: 11px;
+}
+
+.font12 {
+    font-size: 12px;
+}
+
+.font13 {
+    font-size: 13px;
+}
+
+.font14 {
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.font38 {font-size: 38px;
+    line-height: 42px;}
+
+.white {
+    color: #FFFFFF;
+}
+
+.blue {
+    color: #0A0338;
+}
+
+.blue-light {
+    color: #4C84C2;
+}
+
+.border-blue {
+    border-color: #0A0338 !important;
+}
+
+.bg-blue {
+    background-color: #0A0338;
+}
+
+.bg-blue2 {
+    background-color: #2B2965;
+}
+
+.bg-blue-about {background-image: url(../img/bg-nosotros.png); background-repeat: no-repeat; background-size: cover;}
+
+.bg-blue3 {background-color: #061946;}
+
+.bg-blue-light {
+    background-color: #4C84C2;
+}
+
+.fw-400 {
+    font-weight: 400;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.fw-700 {
+    font-weight: 700;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+}
+
+.zoom-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.zoom-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.search-box svg {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    /* distancia desde el borde */
+    transform: translateY(-50%);
+    pointer-events: none;
+    /* que no bloquee clicks */
+    fill: #999;
+    /* color lupa */
+}
+
+.search-box input {
+    padding-left: 40px;
+    background: transparent;
+    border-radius: 30px;
+    color: #FFFFFF;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    font-weight: 300;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #090335;
+}
+
+.search-box input::placeholder {
+    color: #FFFFFF;
+}
+
+.nav-pills .nav-link {
+    color: color(srgb 0 0 0 / 0.5);
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 30px;
+    padding: 10px 25px;
+}
+
+a.btn.dropdown-toggle {
+    color: #8D8D8D;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 30px;
+    border: 1px solid;
+}
+
+.nav-pills .nav-link:hover {
+    color: #5983bd;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    background-color: #4C84C2;
+    color: #FFFFFF;
+}
+
+.dropdown-toggle::after {
+    /* Elimina el estilo del borde que forma el caret */
+    content: none !important;
+}
+
+.buscados .card {
+    border-radius: 20px;
+    background: #F5F5F5;
+    min-height: 400px;
+}
+
+.buscados .card img {
+    mix-blend-mode: multiply;
+}
+
+.tag {
+    width: fit-content;
+    border-radius: 30px;
+    font-size: 13px;
+    letter-spacing: 0.9px;
+    font-weight: 600;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.tab-pane .card {
+    min-height: 370px;
+}
+
+.page-link {
+    border: 0 !important;
+    font-weight: 700;
+    color: #8D8D8D;
+}
+
+.active>.page-link,
+.page-link.active {
+    background-color: transparent;
+    color: #090335;
+}
+
+.page-link:focus {
+    background-color: transparent !important;
+    color: #090335 !important;
+}
+
+.dropdown-item {
+    font-size: 13px;
+    color: #606060;
+}
+
+.instagram {
+    width: 40px;
+    height: 40px;
+    background: #4C84C2;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 37px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #ffffff;
+}
+
+.index-9 {
+    z-index: 9
+}
+
+::selection {
+    background-color: #0A0338;
+    color: #FFFFFF;
+}
+
+.swiper-pagination-bullet-active {
+    background: #090335;
+}
+
+.ls-05 {
+    letter-spacing: 0.5px;
+}
+
+.ls-0 {
+    letter-spacing: 0px;
+}
+
+.bg-producto1 {
+    background-image: url(../img/calefaccion.jpg);
+}
+
+.bg-producto2 {
+    background-image: url(../img/piletas.jpg);
+}
+
+.bg-producto3 {
+    background-image: url(../img/artefactos.png);
+}
+
+.bg-producto4 {
+    background-image: url(../img/construccion.png);
+}
+
+.bg-producto5 {
+    background-image: url(../img/infraestructura.png);
+}
+
+.bg-producto6 {
+    background-image: url(../img/riego.png);
+}
+
+.bg-servicio2 {
+    background-image: url(../img/bombasyfiltros.png);
+}
+
+.bg-servicio3 {
+    background-image: url(../img/construccion-pileta.jpg);
+}
+
+.bg-servicio4 {
+    background-image: url(../img/piezas.png);
+}
+
+.slideProductos .swiper-slide,
+.slideServicios .bg-servicio {
+    background-position: left center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 15px;
+}
+
+.slideProdInterna .bg-product {
+    background-position: right center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 15px;
+}
+
+.slideProdInterna .bg-product::after {
+    position: absolute;
+    content: '';
+    left: 0;
+    top: 0;
+    background: rgb(0 0 0 / 25%);
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+
+.bg-product.swiper-slide-active h2 {
+    font-size: 35px;
+    line-height: 45px;
+}
+
+.bg-product h2 {
+    font-size: 28px;
+    line-height: 35px;
+    position: relative;
+    z-index: 9;
+}
+
+/* Flechas personalizadas */
+.custom-prev,
+.custom-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(50%);
+    z-index: 10;
+    cursor: pointer;
+    color: #ffffff;
+    border: 1px solid #FFFFFF;
+    border-radius: 50%;
+    padding: 8px;
+    transition: background 0.3s ease;
+}
+
+.custom-prev svg, .custom-next svg {
+    width: 16px;
+    height: 16px;
+    text-align: center;
+}
+
+.custom-prev:hover,
+.custom-next:hover {
+    background: rgba(255, 255, 255, 0.8);
+    color: #000000;
+}
+
+/* Posiciones */
+.custom-prev {
+    left: 10px;
+}
+
+.custom-prev svg {
+    margin-right: 3px;
+}
+.custom-next svg {
+    margin-left: 3px;
+}
+.custom-next {
+    right: 10px;
+}
+
+.slideServicios .bg-servicio {
+    min-height: 420px;
+    position: relative;
+}
+
+/* Tamaño base de cada slide */
+.slideProdInterna .swiper-slide {
+    height: 300px;
+    /* altura normal */
+}
+
+/* El slide activo será más grande */
+.slideProdInterna .swiper-slide-active {
+    height: 400px;
+    /* 👈 más alto */
+}
+
+.slideServicios .bg-servicio::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: color(srgb 0.3 0.52 0.76 / 0.6);
+    border-radius: 15px;
+    background: #4C84C2;
+    mix-blend-mode: multiply;
+}
+
+.fit-content {
+    width: fit-content;
+}
+
+.btn-primary {
+    background-color: #0A0338;
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background-color: #4C84C2;
+    border-color: #4C84C2 !important;
+    color: #FFFFFF;
+}
+
+.btn-outline-dark:hover {
+    background-color: #0A0338;
+    border-color: #0A0338 !important;
+    color: #FFFFFF;
+}
+
+@media (max-width: 1400px) {
+
+    .nav-pills .nav-link {
+        font-size: 13px;
+        padding: 7px 20px;
+    }
+
+    a.btn.dropdown-toggle {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 992px) {
+    .nav-pills .nav-link {
+        font-size: 11px;
+        padding: 6px 16px;
+    }
+
+    a.btn.dropdown-toggle {
+        font-size: 11px;
+    }
+}
