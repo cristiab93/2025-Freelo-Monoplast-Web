@@ -39,16 +39,16 @@ include_once("_general.php");
       </div>
 
       <div class="row">
-        <div class="col-12 col-md-6 col-lg-5 zoom-container">
+        <div class="col-10 offset-1 offset-md-0 col-md-7 col-lg-5 zoom-container">
           <img src="img/placeholder.png" id="zoom-img" class="img-fluid">
         </div>
-        <div class="col-12 col-md-6 col-lg-6 offset-lg-1">
-          <h3 id="prod-title" class="blue mb-5 font38"></h3>
+        <div class="col-10 offset-1 offset-md-0 col-md-5 col-lg-6 offset-lg-1">
+          <h3 id="prod-title" class="blue mb-md-5 mb-4 font38 mt-4 mt-md-0"></h3>
           <ul id="prod-features" class="blue fw-400 ps-3"></ul>
           <form>
-            <div class="d-flex mt-5">
+            <div class="d-flex mt-md-5 mt-4">
               <input type="number" value="1" min="1" class="form-control rounded-0 border-blue text-center" style="max-width: 80px;">
-              <button class="btn btn-primary border-0 rounded-0 font13 ms-2 px-4" type="button">Agregar al presupuesto</button>
+              <button class="btn btn-primary border-0 rounded-0 font13 ms-2 px-4" type="button" id="liveToastBtn">Agregar al presupuesto</button>
             </div>
           </form>
         </div>
@@ -59,15 +59,36 @@ include_once("_general.php");
   <section class="pb-5">
     <div class="container">
       <div class="row">
-        <div class="col-12 border-bottom border-blue">
+        <div class="col-md-12 col-10 offset-1 offset-md-0 border-bottom border-blue">
           <p class="blue mb-2 fw-400 ls-0">Otras personas también llevaron</p>
         </div>
-        <div class="col-12 mt-4">
+        <div class="col-md-12 col-10 offset-1 offset-md-0 mt-4">
           <div id="relacionados" class="row gx-3"></div>
         </div>
       </div>
     </div>
   </section>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+    
+      <p class="me-auto blue mb-0 fw-600 font13">Producto agregado al carrito</p>
+     
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+   <div class="d-flex align-items-center mb-3">
+  <div class="offcanvas-product wh70 rounded-3 border" style="background-image: url(img/termotanque.png)"></div>
+  <div class="ms-3">
+  <p class="blue fw-700 mb-1 font14">Ariston Termotanque Eléctrico </p>
+  <p class="blue font12 mb-0">Pro Eco 100 lts</p>
+  </div>
+
+  </div>
+    </div>
+  </div>
+</div>
 
   <?php include_once("templates/footer.php"); ?>
 
@@ -75,5 +96,16 @@ include_once("_general.php");
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
   <script src="js/producto.js"></script>
+  <script>
+   const toastTrigger = document.getElementById('liveToastBtn')
+   const toastLiveExample = document.getElementById('liveToast')
+
+  if (toastTrigger) {
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+  toastTrigger.addEventListener('click', () => {
+    toastBootstrap.show()
+  })
+}
+</script> 
 </body>
 </html>

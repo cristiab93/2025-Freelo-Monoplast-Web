@@ -45,10 +45,10 @@ include_once("_general.php");
   <section class="py-5 my-5">
     <div class="container">
       <div class="row gx-6">
-        <div class="col-12 col-md-6">
+        <div class="col-10 offset-1 offset-md-0 col-md-6">
           <p class="blue mb-0 fw-400 text-justify"><b>Monoplast</b> es una compañía especializada en ofrecer propuestas que cubran las necesidades de nuestros clientes; brindando soluciones integrales mediante la provisión de materiales para obras de infraestructura urbana, redes de agua, drenajes pluviales, cloacas, gas, sistemas de bombeo, riego, calefacción y tendido de redes de telefonía entre otros.</p>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-10 offset-1 offset-md-0 col-md-6 mt-4 mt-md-0">
           <p class="blue mb-0 fw-400 text-justify">Ofrecemos más de 40 años de experiencia en la materia representando las marcas más importantes del mercado. Nuestra misión es establecer relaciones comerciales duraderas, ofreciendo un ámplio surtido Stock permanente.</p>
         </div>
       </div>
@@ -58,10 +58,10 @@ include_once("_general.php");
   <section class="bg-blue3 bg-blue-about py-5">
     <div class="container">
       <div class="row gx-5 align-items-center">
-        <div class="col-12 col-md-6">
+        <div class="col-10 offset-1 offset-md-0 col-md-6">
           <h2 class="text-white fw-300 mb-0">Más de <span class="fw-600">40 años</span> <br> de experiencia</h2>
         </div>
-        <div class="col-12 col-md-6 py-5">
+        <div class="col-10 offset-1 offset-md-0 col-md-6 py-5">
           <p class="white mb-3">• Piezas especiales a medida</p>
           <p class="white mb-3">• Visitas y presupuesto en obra</p>
           <p class="white mb-3">• Cálculos de materiales</p>
@@ -76,7 +76,7 @@ include_once("_general.php");
   <section class="bg-light py-5">
     <div class="container">
       <div class="row">
-        <div class="col-12 text-center">
+        <div class="col-10 offset-1 offset-md-0 col-md-12 text-center">
           <h4 class="blue-light fw-600 mb-5">La mejor atención al <br> cliente y servicio <br> post-venta del mercado</h4>
           <script src="https://elfsightcdn.com/platform.js" async></script>
           <div class="elfsight-app-08482dbb-aaa8-4313-addb-c2976e355ad0" data-elfsight-app-lazy></div>

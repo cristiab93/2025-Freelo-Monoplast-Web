@@ -3,7 +3,7 @@ include_once("_general.php");
 ?>
 <?php include_once("templates/head-info.php"); ?>
 </head>
-<body>
+<body class="bg-blue-light">
   <nav class="navbar navbar-expand-lg position-fixed index-9 w-100">
     <div class="container">
       <a class="navbar-brand" href="index.php"><img src="img/logo.svg" alt="Monoplast"></a>
@@ -32,12 +32,36 @@ include_once("_general.php");
     </div>
   </nav>
 
- <section style="background-color: grey";>
-    <div class="container vh-100">
-      <div class="row align-items-center justify-content-center vh-100">
-        <div class="col-10 text-center">
-          <p>Futura página de contacto</p>
-        </div>
+ <section class="bg-contacto">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+      <div class="col-10 col-lg-6">
+      <h2 class="kento fw-400">CONTACTATE <br>CON NOSOTROS  </h2>
+<p class="text-white font20 mt-3">Enviamos tu consulta y en breve nos <br class="d-none d-lg-block">pondremos en contacto con vos.</p>
+      </div>
+      <div class="col-10 col-lg-5 mt-4 mt-lg-0">
+      <form action="">
+
+      <div class="form-floating mb-3">
+  <input type="text" class="form-control" id="floatingInput" placeholder="">
+  <label for="floatingInput">Nombre</label>
+</div>
+
+      <div class="form-floating mb-3">
+  <input type="email" class="form-control" id="floatingInput" placeholder="">
+  <label for="floatingInput">Email</label>
+</div>
+
+  <div class="form-floating">
+  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 230px"></textarea>
+  <label for="floatingTextarea2">Mensaje</label>
+</div>
+<div class="text-end mt-4">
+<button type="submit" class="btn btn-light fw-500 font14 blue-light py-2 rounded-3 px-5">Enviar</button>
+</div>
+      </form>
+
+      </div>
       </div>
     </div>
   </section>

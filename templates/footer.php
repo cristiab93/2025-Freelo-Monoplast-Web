@@ -18,7 +18,7 @@
             Sáb 9:00 a 12:00</p>
         </div>
         <div class="col text-lg-end text-start">
-          <div class="instagram ms-lg-auto"><img src="img/instagram.svg" height="20"></div>
+          <div class="instagram ms-lg-auto"><a href="https://www.instagram.com/monoplastsanitarios/?hl=es" target="_blank"><img src="img/instagram.svg" height="20"></a></div>
         </div>
       </div>
     </div>

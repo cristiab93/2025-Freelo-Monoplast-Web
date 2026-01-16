@@ -17,7 +17,7 @@ $(function () {
     slidesPerView: 3,
     spaceBetween: 15,
     pagination: { el: ".swiper-pagination", clickable: true },
-    breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 15 } }
+    breakpoints: { 350: { slidesPerView: 1, spaceBetween: 20 }, 768: { slidesPerView: 2, spaceBetween: 20 }, 992: { slidesPerView: 3, spaceBetween: 15 } }
   });
 
   function renderCard(p) {
@@ -27,7 +27,7 @@ $(function () {
     var id = p.id || "";
     var href = "producto.php?id=" + encodeURIComponent(p.enc_id);
     var html = '' +
-      '<div class="col-12 col-md-4 mt-3">' +
+      '<div class="col-10 offset-1 offset-sm-0 col-lg-4 col-sm-6 mt-3">' +
         '<div class="card border-0 position-relative px-3 py-4 h-100">' +
           '<div class="bg-blue tag py-1 px-3"><p class="white mb-0">Más buscados</p></div>' +
           '<img src="' + img + '" class="img-fluid px-5">' +
@@ -46,18 +46,18 @@ $(function () {
   }
 
   function cargarProductos(params) {
-    $("#mas-buscados").html('<div class="col-12 text-center py-5">Cargando...</div>');
+    $("#mas-buscados").html('<div class="col-12 text-center py-5 fw-400">Cargando...</div>');
     $.getJSON("ajax/load-all-products.php", params)
       .done(function (resp) {
         if (!resp || !resp.success || !resp.data || !resp.data.length) {
-          $("#mas-buscados").html('<div class="col-12 text-center py-5">No hay productos para mostrar</div>');
+          $("#mas-buscados").html('<div class="col-md-12 col-10 offset-1 text-center py-5 fw-400">No hay productos para mostrar</div>');
           return;
         }
         var html = resp.data.map(renderCard).join("");
         $("#mas-buscados").html(html);
       })
       .fail(function () {
-        $("#mas-buscados").html('<div class="col-12 text-center py-5">Error al cargar los productos</div>');
+        $("#mas-buscados").html('<div class="col-12 text-center fw-400 py-5">Error al cargar los productos</div>');
       });
   }
 

@@ -37,7 +37,7 @@ include "_general.php";
     </div>
   </nav>
 
-  <section class="py-5 buscados">
+  <section class="py-md-5 py-4 buscados">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
@@ -73,7 +73,7 @@ include "_general.php";
   <section class="pb-5">
     <div class="container">
       <div class="row">
-        <div class="col-12 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3 text-center">
+        <div class="col-10 offset-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3 text-center">
           <h2 class="text-black" id="titulo-categoria">Calefacción</h2>
           <p class="fw-400 mt-3">
             Soluciones eficientes para que tu hogar y tus proyectos estén siempre a la temperatura ideal.
@@ -81,7 +81,7 @@ include "_general.php";
           </p>
         </div>
 
-        <div class="col-12 d-md-flex align-items-center justify-content-between mt-5">
+        <div class="col-12 d-flex align-items-center justify-content-between mt-5">
           <ul class="nav nav-pills justify-content-center order-1" id="pills-tab" role="tablist"></ul>
 
           <div class="dropdown mt-3 mt-md-0 text-center order-2">

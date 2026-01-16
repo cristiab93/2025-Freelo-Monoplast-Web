@@ -52,7 +52,7 @@ $(function () {
       if (resp.related && resp.related.length) {
         $('#relacionados').html(resp.related.map(renderRelacionado).join(''));
       } else {
-        $('#relacionados').html('<div class="col-12 text-muted mt-3">No hay productos relacionados para mostrar.</div>');
+        $('#relacionados').html('<div class="col-12 text-muted mt-3 fw-400">No hay productos relacionados para mostrar.</div>');
       }
     })
     .fail(function () {
