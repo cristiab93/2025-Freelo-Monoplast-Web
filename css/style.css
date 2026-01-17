@@ -11,6 +11,7 @@ html,
 body {
     position: relative;
     height: 100%;
+    width: 100%;
 }
 
 body {
@@ -125,6 +126,10 @@ a.nav-link {
     display: none;
 }
 
+.header-scrolled .navbar-toggler-icon {
+    filter: invert(1);
+}
+
 .offcanvas-product {
     min-height: 90px;
     min-width: 90px;
@@ -133,24 +138,24 @@ a.nav-link {
     background-position: center center;
 }
 
-.wh70 {min-height: 70px; min-width: 70px;}
+.wh70 {
+    min-height: 70px;
+    min-width: 70px;
+}
 
 
 /* 1. Estado inicial transparente */
 #main-header {
+    width: auto !important;
     background-color: transparent;
     transition: background-color 0.4s ease-in-out, padding 0.3s ease;
     padding: 15px 0;
-    /* Un poco de aire inicial */
 }
 
 /* 2. Estado SCROLLEADO (Fondo Azul) */
 #main-header.header-scrolled {
     background-color: #0A0338;
-    /* Tu azul oscuro */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     padding: 5px 0;
-    /* Se compacta un poco al bajar */
 }
 
 /* 3. Ajuste de textos al hacer scroll */
@@ -186,66 +191,7 @@ a.nav-link {
     transition: transform 0.2s;
 }
 
-/* 2. MENU FULL SCREEN EN MÓVIL */
-/* Esto solo afecta cuando la pantalla es menor a 992px (móviles/tablets) */
-@media (max-width: 991.98px) {
-    .navbar-collapse {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        /* Ancho completo */
-        height: 100vh;
-        /* Alto completo de pantalla */
-        background-color: #0A0338;
-        /* Mismo azul que el header scrolleado */
-        z-index: 1040;
-        padding-top: 100px;
-        /* Espacio para no tapar el logo arriba */
-        padding-bottom: 20px;
-        overflow-y: auto;
-        /* Scroll si el menú es muy largo */
 
-        /* Efecto de entrada suave */
-        transition: transform 0.3s ease-in-out;
-    }
-
-    /* Cuando se abre, forzamos que el contenido se centre */
-    .navbar-collapse.show {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    /* Hacemos los enlaces más grandes en móvil */
-    .navbar-nav .nav-link {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        color: white !important;
-        /* Texto blanco en móvil */
-    }
-
-    /* Forzamos al icono del carrito a ser blanco en el menú móvil */
-    .icon-menu path {
-        fill: white !important;
-    }
-}
-
-@media (max-width: 991.98px) {
-
-    /* Aseguramos que el botón hamburguesa flote sobre el menú azul */
-    .navbar-toggler {
-        z-index: 1051;
-        position: relative;
-    }
-
-    /* Aseguramos que el logo flote sobre el menú azul */
-    .navbar-brand {
-        z-index: 1051;
-        position: relative;
-    }
-}
 
 
 .icon-menu {
@@ -278,8 +224,8 @@ a.nav-link {
 }
 
 h1 {
-    font-size: 59px;
-    line-height: 69px;
+    font-size: 48px;
+    line-height: 59px;
     font-weight: 600;
     color: #FFFFFF;
 }
@@ -338,9 +284,40 @@ p {
     background-color: transparent;
 }
 
+.mt-6 {
+    margin-top: 5rem !important;
+}
+
 .form-floating>label {
     color: rgb(255 255 255 / 70%);
     font-size: 14px;
+}
+
+.products-header .navbar-nav {
+    background: rgb(217 217 217 / 54%);
+}
+
+.products-header .search-box input {
+    border-color: #8D8D8D;
+    color: #8D8D8D;
+}
+
+.products-header .search-box input::placeholder {
+    color: #8D8D8D;
+}
+
+.header-scrolled .products-header .search-box input {
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+.header-scrolled .products-header .search-box input::placeholder {
+    color: #FFFFFF;
+}
+
+.products-header a.nav-link {
+
+    color: #2B2965;
 }
 
 .form-floating .form-control {
@@ -409,7 +386,6 @@ p {
 
 .search-box {
     position: relative;
-    width: 100%;
 }
 
 .zoom-container {
@@ -460,7 +436,8 @@ p {
 
 .form-control:focus {
     background-color: #5983bd !important;
-    box-shadow: none;color: #FFFFFF;
+    box-shadow: none;
+    color: #FFFFFF;
     border-color: #5983bd;
 }
 
@@ -785,21 +762,119 @@ a.btn.dropdown-toggle {
     }
 }
 
+@media (max-width: 991.98px) {
+
+    .products-header .search-box input {
+        border-color: #ffffff;
+        color: #ffffff;
+    }
+
+    .products-header .search-box input::placeholder {
+        color: #ffffff;
+    }
+
+    .products-header a.nav-link {
+        color: #ffffff;
+    }
+
+    .navbar-collapse {
+        display: block !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: auto !important;
+        height: 100vh;
+        background-color: #0A0338;
+        z-index: 1040;
+        padding-top: 90px;
+        padding-left: 20px;
+        padding-right: 20px;
+        transform: translateY(-100%);
+        visibility: hidden;
+        transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.1s;
+    }
+
+    /* 2. ESTADO ABIERTO (La cortina baja) */
+    .navbar-collapse.show {
+        transform: translateY(0);
+        visibility: visible;
+    }
+
+    /* 3. ESTADO CERRANDO (Bootstrap .collapsing) */
+    /* IMPORTANTE: Esto arregla que "no funcione al cerrar" */
+    .navbar-collapse.collapsing {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: auto !important;
+        height: 100vh;
+        background-color: #0A0338;
+        z-index: 1040;
+        padding-top: 90px;
+        display: block !important;
+        transform: translateY(-100%);
+        transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.1s delay 0.3s;
+    }
+
+    /* 4. CONTENIDO INTERNO (Sin fade progresivo, todo junto) */
+    /* Apple muestra el contenido sólido, solo lo bajamos un poco */
+    .navbar-nav,
+    .search-box {
+        opacity: 0;
+        transition: opacity 0.3s ease 0.2s;
+        /* Un pequeño delay para que aparezca cuando el fondo ya bajó */
+    }
+
+    .navbar-collapse.show .navbar-nav,
+    .navbar-collapse.show .search-box {
+        opacity: 1;
+        margin-top: 10%;
+        text-align: left !important;
+        background-color: transparent;
+    }
+
+    a.nav-link {
+        font-size: 25px;
+        font-weight: 400;
+    }
+
+    .search-box input {
+        font-size: 17px;
+        min-height: 47px;
+    }
+
+    /* 5. ASEGURAR QUE EL BOTÓN Y EL LOGO ESTÉN ENCIMA */
+    .navbar-toggler,
+    .navbar-brand {
+        z-index: 1051;
+        position: relative;
+    }
+
+
+}
+
+
 @media (max-width: 992px) {
     h1 {
         font-size: 43px;
         line-height: 53px;
     }
 
+    .buscados .card {
+
+        min-height: 370px;
+    }
+
     .bg-contacto {
         padding: 130px 0 90px;
     }
 
-    .font38
- {
-    font-size: 34px;
-    line-height: 36px;
-}
+    .font38 {
+        font-size: 34px;
+        line-height: 36px;
+    }
 
     h2 {
         font-size: 46px;
@@ -814,37 +889,120 @@ a.btn.dropdown-toggle {
     a.btn.dropdown-toggle {
         font-size: 11px;
     }
+
+    .logo-nosotros {
+        min-width: 270px;
+    }
 }
 
 @media (max-width: 768px) {
-h4
- {
-    font-size: 41px;
-    line-height: 44px;
+
+    h4 {
+        font-size: 41px;
+        line-height: 44px;
+    }
 }
-}
+
 @media (max-width: 576px) {
-    .font38
- {
-    font-size: 32px;
-    line-height: 32px;
-}
+    p {
+        font-size: 17px;
+    }
+
+    .slideServicios .bg-servicio {
+        min-height: 280px;
+        position: relative;
+    }
+
+    #relacionados .card p.font14 {
+        font-size: 16px;
+    }
+
+    #relacionados .card p.font12 {
+        font-size: 13px;
+    }
+
+    .buscados .card p {
+        font-size: 16px;
+    }
+
+    .buscados .card p.font13 {
+        font-size: 14px;
+    }
+
+    .tag .font11 {
+        font-size: 12px;
+    }
+
+    .tag p {
+        font-size: 12px !important;
+    }
+
+    .buscados .btn {
+        width: 90%;
+        font-size: 14px;
+    }
+
+    .logo-nosotros {
+        min-width: 200px;
+    }
+
+    .btn-product .btn {
+        width: 90%;
+        font-size: 14px;
+    }
+
+    .font38 {
+        font-size: 28px;
+        line-height: 32px;
+    }
+
     .swiper-slide .content {
         width: 80%;
     }
 
     h4 {
-        font-size: 36px;
-        line-height: 42px;
+        font-size: 33px;
+        line-height: 38px;
     }
 
     h1 {
-        font-size: 40px;
-        line-height: 49px;
+        font-size: 28px;
+        line-height: 38px;
+    }
+
+    .slideProdInterna .swiper-slide {
+        height: 270px;
+    }
+
+    .nav-pills .nav-link {
+        font-size: 12px;
+    }
+
+    a.btn.dropdown-toggle {
+        font-size: 12px;
+    }
+
+    .bg-product.swiper-slide-active h2 {
+        font-size: 26px;
+        line-height: 34px;
+    }
+
+    .buscados .card {
+
+        min-height: auto;
     }
 
     h2 {
-        font-size: 40px;
-        line-height: 45px;
+        font-size: 32px;
+        line-height: 38px;
+    }
+
+    .font20 {
+        font-size: 17px;
+        line-height: 26px;
+    }
+
+    :root {
+        --swiper-navigation-size: 30px;
     }
 }

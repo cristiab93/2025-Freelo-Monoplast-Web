@@ -1,3 +1,5 @@
+
+
 $(function () {
   var mySwiper = new Swiper(".mySwiper", {
     navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
@@ -28,19 +30,19 @@ $(function () {
     var href = "producto.php?id=" + encodeURIComponent(p.enc_id);
     var html = '' +
       '<div class="col-10 offset-1 offset-sm-0 col-lg-4 col-sm-6 mt-3">' +
-        '<div class="card border-0 position-relative px-3 py-4 h-100">' +
-          '<div class="bg-blue tag py-1 px-3"><p class="white mb-0">Más buscados</p></div>' +
-          '<img src="' + img + '" class="img-fluid px-5">' +
-          '<div class="row align-items-center mt-2">' +
-            '<div class="col-12 col-md">' +
-              '<p class="blue mb-1 fw-700 text-uppercase">' + name + '</p>' +
-              '<p class="blue mb-0 font13">' + sub + '</p>' +
-            '</div>' +
-            '<div class="col-12 col-md-auto mt-2 mt-md-0 d-flex gap-2">' +
-              '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4">Ver detalles</a>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
+      '<div class="card border-0 position-relative px-3 py-4 h-100">' +
+      '<div class="bg-blue tag py-1 px-3"><p class="white mb-0">Más buscados</p></div>' +
+      '<img src="' + img + '" class="img-fluid px-5">' +
+      '<div class="row align-items-center mt-2">' +
+      '<div class="col-12 col-md text-center text-md-start">' +
+      '<p class="blue mb-1 fw-700 text-uppercase mt-2">' + name + '</p>' +
+      '<p class="blue mb-0 font13">' + sub + '</p>' +
+      '</div>' +
+      '<div class="col-12 col-md-auto mt-3 mt-md-0 d-flex justify-content-center gap-2">' +
+      '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4">Ver detalles</a>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
       '</div>';
     return html;
   }
@@ -63,3 +65,15 @@ $(function () {
 
   cargarProductos({ limit: 6, order: "recent" });
 });
+
+window.addEventListener('scroll', function () {
+  const header = document.getElementById('main-header');
+  if (!header) return;
+
+  if (window.scrollY > 50) {
+    header.classList.add('header-scrolled');
+  } else {
+    header.classList.remove('header-scrolled');
+  }
+});
+

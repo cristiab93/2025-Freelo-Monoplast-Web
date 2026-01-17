@@ -23,11 +23,11 @@ $(function () {
         '<div class="card bg-light border-0 position-relative rounded-3 px-3 py-4 h-100">' +
           '<div class="bg-blue tag py-1 px-3"><p class="white fw-500 font11 mb-0">Más buscados</p></div>' +
           '<img src="' + img + '" class="img-fluid multiply px-sm-0 px-5 px-md-5 mt-3">' +
-          '<p class="blue mb-0 text-uppercase font14 mt-3 fw-700">' + (p.name || '') + '</p>' +
-          '<p class="blue mb-0 font12 mt-1">' + (p.subname || '') + '</p>' +
-          '<div class="d-flex align-items-center justify-content-between mt-3">' +
-            '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-xxl-4 px-xl-2 px-md-3 px-sm-2 px-4 mt-3">Ver detalles</a>' +
-            '<button type="button" class="btn btn-primary font11 blue border-blue rounded-5 px-xxl-4 px-xl-3 px-md-3 px-sm-2 px-4 mt-3">Agregar al presupuesto</button>' +
+          '<p class="blue mb-0 text-uppercase font14 mt-3 fw-700 text-center text-md-start">' + (p.name || '') + '</p>' +
+          '<p class="blue mb-0 font12 mt-1 text-center text-md-start">' + (p.subname || '') + '</p>' +
+          '<div class="d-sm-flex align-items-center text-center justify-content-between mt-3 btn-product">' +
+            '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-xxl-4 px-xl-2 px-md-3 px-sm-2 px-4 mt-md-3 mt-1">Ver detalles</a>' +
+            '<button type="button" class="btn btn-primary font11 blue border-blue rounded-5 px-xxl-4 px-xl-3 px-md-3 px-sm-2 px-4 mt-md-3 mt-2">Agregar al presupuesto</button>' +
           '</div>' +
         '</div>' +
       '</div>';
