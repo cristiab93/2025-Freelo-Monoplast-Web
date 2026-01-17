@@ -218,7 +218,7 @@ include_once("_general.php");
           <p class="blue mb-2 fw-400 ls-0">Otras personas también llevaron</p>
         </div>
         <div class="col-md-12 col-10 offset-1 offset-md-0 mt-4">
-          <div id="relacionados" class="row gx-3"></div>
+          <div id="relacionados" class="row gx-md-3"></div>
         </div>
       </div>
     </div>

@@ -196,7 +196,7 @@ include_once("_general.php");
 
   <section class="py-5 my-5">
     <div class="container">
-      <div class="row gx-6">
+      <div class="row gx-md-6">
         <div class="col-10 offset-1 offset-md-0 col-md-6">
           <p class="blue mb-0 fw-400 text-justify"><b>Monoplast</b> es una compañía especializada en ofrecer propuestas que cubran las necesidades de nuestros clientes; brindando soluciones integrales mediante la provisión de materiales para obras de infraestructura urbana, redes de agua, drenajes pluviales, cloacas, gas, sistemas de bombeo, riego, calefacción y tendido de redes de telefonía entre otros.</p>
         </div>
@@ -209,7 +209,7 @@ include_once("_general.php");
 
   <section class="bg-blue3 bg-blue-about py-5">
     <div class="container">
-      <div class="row gx-5 align-items-center">
+      <div class="row gx-md-5 align-items-center">
         <div class="col-10 offset-1 offset-md-0 col-md-6">
           <h2 class="text-white fw-300 mb-0">Más de <span class="fw-600">40 años</span> <br> de experiencia</h2>
         </div>
@@ -229,9 +229,10 @@ include_once("_general.php");
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 offset-md-0 col-md-12 text-center">
-          <h4 class="blue-light fw-600 mb-5">La mejor atención al <br> cliente y servicio <br> post-venta del mercado</h4>
-          <script src="https://elfsightcdn.com/platform.js" async></script>
-          <div class="elfsight-app-08482dbb-aaa8-4313-addb-c2976e355ad0" data-elfsight-app-lazy></div>
+          <h4 class="blue-light fw-600 mb-5">La mejor atención al <br class="d-none d-md-block"> cliente y servicio <br class="d-none d-md-block"> post-venta del mercado</h4>
+           <script src="https://elfsightcdn.com/platform.js" async></script>
+          <!-- Elfsight Google Reviews | Monoplast -->
+<div class="elfsight-app-cfa65342-c921-4095-90bd-0db03d20cb77" data-elfsight-app-lazy></div>
         </div>
       </div>
     </div>

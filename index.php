@@ -224,7 +224,7 @@ include_once ("_general.php");
 
   <section class="bg-blue-light">
     <div class="container">
-      <div class="row gx-5">
+      <div class="row gx-md-5">
         <div class="col-10 offset-1 offset-md-0 col-md-6">
           <div class="swiper slideProductos py-5">
             <div class="swiper-wrapper">

@@ -246,7 +246,7 @@ include "_general.php";
         </div>
 
         <div class="col-12 mt-4">
-          <div class="row gx-3" id="grid-productos"></div>
+          <div class="row gx-md-3" id="grid-productos"></div>
 
           <nav id="nav-paginacion" class="d-none">
             <ul class="pagination justify-content-center mt-5" id="pagination"></ul>

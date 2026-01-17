@@ -121,6 +121,10 @@ a.nav-link {
     font-size: 16px;
 }
 
+.header-scrolled .icon-menu-mobile path {
+    fill: white !important;
+}
+
 /* Input oculto real para formularios */
 .qty-input-hidden {
     display: none;
