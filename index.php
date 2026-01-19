@@ -187,6 +187,8 @@ include_once ("_general.php");
   </div>
 </div>
 
+
+<main>
   <section>
     <div class="swiper mySwiper">
       <div class="swiper-wrapper">
@@ -211,7 +213,7 @@ include_once ("_general.php");
     </div>
   </section>
 
-  <section class="py-5 buscados">
+  <section class="py-5 buscados bg-white">
     <div class="container">
       <div class="row">
         <div class="col-md-12 offset-md-0 col-10 offset-1 border-bottom border-blue mb-4">
@@ -248,7 +250,7 @@ include_once ("_general.php");
     </div>
   </section>
 
-  <section class="py-5 servicios">
+  <section class="py-5 servicios bg-white">
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 col-md-12 offset-md-0 border-bottom border-blue mb-4">
@@ -293,6 +295,7 @@ include_once ("_general.php");
       </div> 
     </div>
   </section>
+</main>
 
   <?php include_once ("templates/footer.php") ?>
 

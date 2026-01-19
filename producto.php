@@ -183,7 +183,8 @@ include_once("_general.php");
   </div>
 </div>
 
-  <section class="py-5 mt-6">
+<main>
+  <section class="py-5 mt-6 bg-white">
     <div class="container">
       <div class="row">
         <div class="col-auto mb-4">
@@ -211,7 +212,7 @@ include_once("_general.php");
     </div>
   </section>
 
-  <section class="pb-5">
+  <section class="pb-5 bg-white">
     <div class="container">
       <div class="row">
         <div class="col-md-12 col-10 offset-1 offset-md-0 border-bottom border-blue">
@@ -244,7 +245,7 @@ include_once("_general.php");
     </div>
   </div>
 </div>
-
+</main>
   <?php include_once("templates/footer.php"); ?>
 
   <script src="js/jquery-3.5.1.min.js"></script>

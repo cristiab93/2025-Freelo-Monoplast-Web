@@ -184,7 +184,8 @@ include "_general.php";
   </div>
 </div>
 
-  <section class="py-md-5 py-4 buscados mt-6">
+<main>
+  <section class="py-md-5 py-4 buscados bg-white mt-6">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
@@ -217,7 +218,7 @@ include "_general.php";
     </div>
   </section>
 
-  <section class="pb-5">
+  <section class="pb-5 bg-white">
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3 text-center">
@@ -255,6 +256,8 @@ include "_general.php";
       </div>
     </div>
   </section>
+
+</main>
 
   <?php include_once("templates/footer.php"); ?>
 

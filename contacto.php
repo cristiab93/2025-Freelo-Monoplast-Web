@@ -184,7 +184,8 @@ include_once("_general.php");
   </div>
 </div>
 
- <section class="bg-contacto">
+<main>
+ <section class="bg-contacto bg-blue-light">
     <div class="container">
       <div class="row align-items-center justify-content-center">
       <div class="col-10 col-lg-6">
@@ -218,6 +219,7 @@ include_once("_general.php");
     </div>
   </section>
 
+</main>
   <?php include_once("templates/footer.php"); ?>
 
   <script src="js/jquery-3.5.1.min.js"></script>

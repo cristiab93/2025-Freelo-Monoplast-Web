@@ -27,7 +27,7 @@ $(function () {
           '<p class="blue mb-0 font12 mt-1 text-center text-md-start">' + (p.subname || '') + '</p>' +
           '<div class="d-sm-flex align-items-center text-center justify-content-between mt-3 btn-product">' +
             '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-xxl-4 px-xl-2 px-md-3 px-sm-2 px-4 mt-md-3 mt-1">Ver detalles</a>' +
-            '<button type="button" class="btn btn-primary font11 blue border-blue rounded-5 px-xxl-4 px-xl-3 px-md-3 px-sm-2 px-4 mt-md-3 mt-2">Agregar al presupuesto</button>' +
+            '<button type="button" id="liveToastBtn" class="btn btn-primary font11 blue border-blue rounded-5 px-xxl-4 px-xl-3 px-md-3 px-sm-2 px-4 mt-md-3 mt-2">Agregar al presupuesto</button>' +
           '</div>' +
         '</div>' +
       '</div>';
