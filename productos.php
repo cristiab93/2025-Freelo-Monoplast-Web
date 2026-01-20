@@ -229,21 +229,8 @@ include "_general.php";
           </p>
         </div>
 
-        <div class="col-12 d-flex align-items-center justify-content-between mt-5">
-          <ul class="nav nav-pills justify-content-center order-1" id="pills-tab" role="tablist"></ul>
-
-          <div class="dropdown text-center order-2">
-            <a class="btn px-lg-4 py-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Más reciente <svg class="ms-3" xmlns="http://www.w3.org/2000/svg" width="14" height="7" viewBox="0 0 17 9" fill="none">
-                <path d="M15.811 1L8.40548 8.40555L0.999925 0.999999" stroke="#8D8D8D" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
+        <div class="col-12 d-flex align-items-center justify-content-center mt-5">
+          <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist"></ul>
         </div>
 
         <div class="col-12 mt-4">

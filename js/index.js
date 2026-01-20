@@ -35,7 +35,7 @@ $(function () {
       '<img src="' + img + '" class="img-fluid px-5">' +
       '<div class="row align-items-center mt-2">' +
       '<div class="col-12 col-md text-center text-md-start">' +
-      '<p class="blue mb-1 fw-700 text-uppercase mt-2">' + name + '</p>' +
+      '<p class="blue mb-1 fw-700 text-uppercase mt-2 product-title">' + name + '</p>' +
       '<p class="blue mb-0 font13">' + sub + '</p>' +
       '</div>' +
       '<div class="col-12 col-md-auto mt-3 mt-md-0 d-flex justify-content-center gap-2">' +

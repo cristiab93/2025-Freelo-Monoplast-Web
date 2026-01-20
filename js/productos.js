@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
+  var swiperInstance;
   var swEl = document.querySelector(".slideProdInterna");
   if (swEl) {
-    new Swiper(".slideProdInterna", {
+    swiperInstance = new Swiper(".slideProdInterna", {
       loop: true,
       slidesPerView: 3,
       spaceBetween: 15,
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var currentCategory = initialCat() || "calefaccion";
   var currentSubcat = "";
   var currentPage = 1;
-  var perPage = 8;
+  var perPage = 12;
   var totalPages = 1;
   var allSubcats = [];
 
@@ -45,16 +46,19 @@ document.addEventListener("DOMContentLoaded", function () {
     var subn = p.subname || "";
     return '' +
       '<div class="col-12 col-sm-6 col-lg-4 col-xl-3 mt-3">' +
-      '  <div class="card bg-light border-0 position-relative rounded-3 px-3 py-4 h-100">' +
-      '    <div class="bg-blue tag py-1 px-3"><p class="white fw-500 font11 mb-0">Más buscados</p></div>' +
-      '    <img src="' + img + '" class="img-fluid multiply px-sm-0 px-5 px-md-5 mt-3" alt="' + name.replace(/"/g, "&quot;") + '">' +
-      '    <p class="blue mb-0 text-uppercase font14 mt-3 fw-700">' + name + '</p>' +
-      '    <p class="blue mb-0 font12 mt-1">' + subn + '</p>' +
-      '    <div class="d-flex align-items-center justify-content-between mt-3">' +
-      '      <a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-xxl-4 px-xl-2 px-md-3 px-sm-2 px-4 mt-3">Ver detalles</a>' +
-      '      <button type="button" class="btn btn-primary font11 blue border-blue rounded-5 px-xxl-4 px-xl-3 px-md-3 px-sm-2 px-4 mt-3">Agregar al presupuesto</button>' +
-      '    </div>' +
-      '  </div>' +
+      '<div class="card border-0 position-relative px-3 py-4 h-100">' +
+      '<div class="bg-blue tag py-1 px-3"><p class="white mb-0">Más buscados</p></div>' +
+      '<img src="' + img + '" class="img-fluid px-5">' +
+      '<div class="row align-items-center mt-2">' +
+      '<div class="col-12 text-center text-md-start">' +
+      '<p class="blue mb-1 fw-700 text-uppercase mt-2 product-title">' + name + '</p>' +
+      '<p class="blue mb-0 font13">' + subn + '</p>' +
+      '</div>' +
+      '<div class="col-12 mt-3 d-flex justify-content-center justify-content-md-start">' +
+      '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4">Ver detalles</a>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
       '</div>'
   }
 
@@ -132,9 +136,31 @@ document.addEventListener("DOMContentLoaded", function () {
       currentSubcat = "";
       allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
       currentPage = 1;
-      render()
+      render();
+
+      // Mover el slide clickeado a la primera posición
+      var idx = slide.getAttribute("data-swiper-slide-index");
+      if (swiperInstance && idx !== null) {
+        swiperInstance.slideToLoop(parseInt(idx));
+      }
     })
   });
+
+  function selectInitialSlide() {
+    if (!swiperInstance) return;
+    var slides = document.querySelectorAll(".slideProdInterna .swiper-slide:not(.swiper-slide-duplicate)");
+    slides.forEach(function (slide) {
+      var h2 = slide.querySelector("h2");
+      var text = h2 ? h2.textContent : "";
+      var key = keyFromSliderText(text);
+      if (key === currentCategory) {
+        var idx = slide.getAttribute("data-swiper-slide-index");
+        if (idx !== null) {
+          swiperInstance.slideToLoop(parseInt(idx), 0);
+        }
+      }
+    });
+  }
 
   $.getJSON("ajax/products-all.php")
     .done(function (resp) {
@@ -144,10 +170,13 @@ document.addEventListener("DOMContentLoaded", function () {
       SUBS_BY_CAT = resp.subcats_by_category || {};
       rebuildReverse();
       allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
-      render()
+      render();
+      selectInitialSlide();
     })
     .fail(function () {
       ALL = []; MAP = {}; SUBS_BY_CAT = {};
-      render()
+      render();
+      selectInitialSlide();
     })
+
 });
