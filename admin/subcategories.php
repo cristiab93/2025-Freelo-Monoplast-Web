@@ -7,22 +7,42 @@ function fetch_categories(){
     $rows = SelectQuery('categories')->Order('category_name','ASC')->Limit(1000000)->Run();
     return is_array($rows) ? array_values($rows) : [];
 }
-function cat_exists_by_id($id){
-    if ($id <= 0) return false;
-    $r = SelectQuery('categories')->Condition('category_id =','i',(int)$id)->Limit(1)->Run();
+function cat_exists_by_key($key){
+    $key = trim($key);
+    if ($key === '') return false;
+    $r = SelectQuery('categories')->Condition('category_key_word =','s',$key)->Limit(1)->Run();
     return !empty($r);
 }
-/* nombre duplicado dentro del mismo father, case-insensitive */
-function subcat_exists($name, $father_id, $exclude_id = 0){
+/* nombre duplicado dentro del mismo father (keyword), case-insensitive */
+function subcat_exists($name, $key, $father_key, $exclude_id = 0){
     $name = trim($name);
-    $father_id = (int)$father_id;
-    if ($name === '' || $father_id <= 0) return false;
+    $key  = trim($key);
+    $father_key = trim($father_key);
+    if ($name === '' || $father_key === '') return false;
+    
+    // Check name + father
     $q = SelectQuery('sub_categories')
-        ->Condition('sub_category_father =','i',$father_id)
+        ->Condition('sub_category_father =','s',$father_key) // Father is string now
         ->Condition('LOWER(sub_category_name) =','s', mb_strtolower($name,'UTF-8'));
     if ($exclude_id > 0) $q->Condition('sub_category_id <>','i',(int)$exclude_id);
     $r = $q->Limit(1)->Run();
-    return !empty($r);
+    if (!empty($r)) return 'name_dup';
+    
+    // Check key
+    if ($key !== '') {
+        $q2 = SelectQuery('sub_categories')->Condition('sub_category_key_word =','s',$key);
+        if ($exclude_id > 0) $q2->Condition('sub_category_id <>','i',(int)$exclude_id);
+        $r2 = $q2->Limit(1)->Run();
+        if (!empty($r2)) return 'key_dup';
+    }
+
+    return false;
+}
+
+function count_products_in_subcat($keyword) {
+    if (trim($keyword) === '') return 0;
+    $rows = SelectQuery('products')->Condition('product_subcategory =', 's', $keyword)->Run();
+    return is_array($rows) ? count($rows) : 0;
 }
 
 /* ====================== acciones CRUD ====================== */
@@ -31,15 +51,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'create') {
         $name = trim($_POST['sub_category_name'] ?? '');
-        $father = (int)($_POST['sub_category_father'] ?? 0);
+        $key = trim($_POST['sub_category_key_word'] ?? '');
+        $father = trim($_POST['sub_category_father'] ?? ''); // Keyword string
 
-        if ($name === '' || $father <= 0) { header('Location: subcategories.php?m=invalid'); exit; }
-        if (!cat_exists_by_id($father))   { header('Location: subcategories.php?m=nofather'); exit; }
-        if (subcat_exists($name, $father)){ header('Location: subcategories.php?m=dup'); exit; }
+        if ($name === '' || $father === '' || $key === '') { header('Location: subcategories.php?m=invalid'); exit; }
+        if (!cat_exists_by_key($father))   { header('Location: subcategories.php?m=nofather'); exit; }
+        
+        $dup = subcat_exists($name, $key, $father);
+        if ($dup === 'name_dup'){ header('Location: subcategories.php?m=dup'); exit; }
+        if ($dup === 'key_dup') { header('Location: subcategories.php?m=dup_key'); exit; }
 
         InsertQuery('sub_categories')
             ->Value('sub_category_name','s',$name)
-            ->Value('sub_category_father','i',$father)
+            ->Value('sub_category_key_word','s',$key)
+            ->Value('sub_category_father','s',$father) // Save as string
             ->Run();
 
         header('Location: subcategories.php?m=created'); exit;
@@ -48,15 +73,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'update') {
         $id     = (int)($_POST['sub_category_id'] ?? 0);
         $name   = trim($_POST['sub_category_name'] ?? '');
-        $father = (int)($_POST['sub_category_father'] ?? 0);
+        $key    = trim($_POST['sub_category_key_word'] ?? '');
+        $father = trim($_POST['sub_category_father'] ?? '');
 
-        if ($id <= 0 || $name === '' || $father <= 0) { header('Location: subcategories.php?m=invalid'); exit; }
-        if (!cat_exists_by_id($father))               { header('Location: subcategories.php?m=nofather'); exit; }
-        if (subcat_exists($name, $father, $id))       { header('Location: subcategories.php?m=dup'); exit; }
+        if ($id <= 0 || $name === '' || $father === '' || $key === '') { header('Location: subcategories.php?m=invalid'); exit; }
+        if (!cat_exists_by_key($father))               { header('Location: subcategories.php?m=nofather'); exit; }
+        
+        $dup = subcat_exists($name, $key, $father, $id);
+        if ($dup === 'name_dup')       { header('Location: subcategories.php?m=dup'); exit; }
+        if ($dup === 'key_dup')       { header('Location: subcategories.php?m=dup_key'); exit; }
 
         UpdateQuery('sub_categories')
             ->Value('sub_category_name','s',$name)
-            ->Value('sub_category_father','i',$father)
+            ->Value('sub_category_key_word','s',$key)
+            ->Value('sub_category_father','s',$father)
             ->Condition('sub_category_id =','i',$id)
             ->Run();
 
@@ -66,7 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete') {
         $id = (int)($_POST['sub_category_id'] ?? 0);
         if ($id > 0) {
-            DeleteQuery('sub_categories')->Condition('sub_category_id =','i',$id)->Run();
+            $curr = SelectQuery('sub_categories')->Condition('sub_category_id =','i',$id)->Limit(1)->Run();
+            if ($curr && is_array($curr)) {
+                $row = array_values($curr)[0];
+                $key = $row['sub_category_key_word'];
+                
+                $count = count_products_in_subcat($key);
+                if ($count > 0) {
+                    header('Location: subcategories.php?m=has_products'); exit;
+                }
+                
+                DeleteQuery('sub_categories')->Condition('sub_category_id =','i',$id)->Run();
+            }
         }
         header('Location: subcategories.php?m=deleted'); exit;
     }
@@ -80,8 +121,8 @@ $sub_rows = SelectQuery('sub_categories')
 $subcats = is_array($sub_rows) ? array_values($sub_rows) : [];
 
 $cats = fetch_categories();
-$cat_map = [];
-foreach ($cats as $c) $cat_map[(int)$c['category_id']] = $c['category_name'];
+$cat_map = []; // Key -> Name
+foreach ($cats as $c) $cat_map[$c['category_key_word']] = $c['category_name'];
 $has_categories = count($cats) > 0;
 ?>
 <!DOCTYPE html>
@@ -141,18 +182,24 @@ $has_categories = count($cats) > 0;
       </div>
     <?php endif; ?>
 
-    <?php if (isset($_GET['m']) && $_GET['m'] === 'created'): ?>
-      <div class="alert alert-success mt-3">Subcategoría creada</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'updated'): ?>
-      <div class="alert alert-info mt-3">Subcategoría actualizada</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'deleted'): ?>
-      <div class="alert alert-warning mt-3">Subcategoría eliminada</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'invalid'): ?>
-      <div class="alert alert-danger mt-3">Datos incompletos</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'dup'): ?>
-      <div class="alert alert-danger mt-3">Ya existe una subcategoría con ese nombre en esa categoría</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'nofather'): ?>
-      <div class="alert alert-danger mt-3">La categoría padre no existe</div>
+    <?php if (isset($_GET['m'])): ?>
+        <?php if ($_GET['m'] === 'created'): ?>
+        <div class="alert alert-success mt-3">Subcategoría creada</div>
+        <?php elseif ($_GET['m'] === 'updated'): ?>
+        <div class="alert alert-info mt-3">Subcategoría actualizada</div>
+        <?php elseif ($_GET['m'] === 'deleted'): ?>
+        <div class="alert alert-warning mt-3">Subcategoría eliminada</div>
+        <?php elseif ($_GET['m'] === 'invalid'): ?>
+        <div class="alert alert-danger mt-3">Datos incompletos</div>
+        <?php elseif ($_GET['m'] === 'dup'): ?>
+        <div class="alert alert-danger mt-3">Ya existe una subcategoría con ese nombre en esa categoría</div>
+        <?php elseif ($_GET['m'] === 'dup_key'): ?>
+        <div class="alert alert-danger mt-3">Ya existe una subcategoría con esa KEY (identificador)</div>
+        <?php elseif ($_GET['m'] === 'nofather'): ?>
+        <div class="alert alert-danger mt-3">La categoría padre no existe</div>
+        <?php elseif ($_GET['m'] === 'has_products'): ?>
+        <div class="alert alert-danger mt-3">No se puede eliminar: Hay productos asociados a esta subcategoría.</div>
+        <?php endif; ?>
     <?php endif; ?>
 
     <div class="table-wrap mt-3">
@@ -161,27 +208,30 @@ $has_categories = count($cats) > 0;
           <tr>
             <th style="width:110px">ID</th>
             <th>Subcategoría</th>
+            <th>Key (ID único)</th>
             <th style="width:320px">Categoría padre</th>
             <th style="width:230px">Acciones</th>
           </tr>
         </thead>
         <tbody>
         <?php if (!count($subcats)): ?>
-          <tr><td colspan="4">No hay subcategorías cargadas</td></tr>
+          <tr><td colspan="5">No hay subcategorías cargadas</td></tr>
         <?php else: foreach ($subcats as $s): 
-            $fid = (int)($s['sub_category_father'] ?? 0);
-            $father_name = $cat_map[$fid] ?? ('ID '.$fid);
+            $f_key = $s['sub_category_father'] ?? '';
+            $father_name = $cat_map[$f_key] ?? ('('.$f_key.')');
         ?>
           <tr>
             <td><?= (int)$s['sub_category_id'] ?></td>
             <td><?= htmlspecialchars($s['sub_category_name'] ?? '') ?></td>
+            <td><code><?= htmlspecialchars($s['sub_category_key_word'] ?? '') ?></code></td>
             <td><?= htmlspecialchars($father_name) ?></td>
             <td>
               <button
                 class="btn btn-sm btn-secondary btn-edit"
                 data-id="<?= (int)$s['sub_category_id'] ?>"
                 data-name="<?= htmlspecialchars($s['sub_category_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                data-father="<?= (int)$s['sub_category_father'] ?>"
+                data-key="<?= htmlspecialchars($s['sub_category_key_word'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                data-father-key="<?= htmlspecialchars($s['sub_category_father'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                 type="button">
                 Editar
               </button>
@@ -205,36 +255,36 @@ $has_categories = count($cats) > 0;
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: min(800px, 95vw);">
     <form method="post" action="subcategories.php" class="modal-content" id="createForm">
-      <style>
-        #createModal .modal-header{padding:18px 22px}
-        #createModal .modal-body{padding:16px 22px}
-        #createModal .modal-footer{padding:12px 22px}
-        #createModal .form-grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px;}
-        @media (max-width: 768px){
-          #createModal .form-grid{grid-template-columns: 1fr;}
-        }
-      </style>
       <div class="modal-header">
         <h5 class="modal-title">Nueva subcategoría</h5>
         <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <input type="hidden" name="action" value="create">
-        <div class="form-grid">
-          <div class="form-group">
+        
+        <div class="form-group mb-3">
             <label>Nombre</label>
             <input type="text" name="sub_category_name" id="c_name" class="form-control" placeholder="Nombre de la subcategoría" required>
-          </div>
-          <div class="form-group">
+        </div>
+        
+        <div class="form-group mb-3">
+             <label>Key (Identificador único)</label>
+             <!-- Visual only -->
+             <input type="text" id="c_key_vis" class="form-control" readonly style="background-color:#e9ecef; border:1px solid #ced4da; color:#6c757d;">
+             <input type="hidden" name="sub_category_key_word" id="c_key">
+             <small class="text-muted">Se genera automáticamente.</small>
+        </div>
+
+        <div class="form-group">
             <label>Categoría padre</label>
             <select name="sub_category_father" id="c_father" class="form-control" required>
                 <option value="" disabled selected>Seleccioná una categoría</option>
                 <?php foreach ($cats as $c): ?>
-                  <option value="<?= (int)$c['category_id'] ?>"><?= htmlspecialchars($c['category_name']) ?></option>
+                    <option value="<?= htmlspecialchars($c['category_key_word']) ?>"><?= htmlspecialchars($c['category_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-          </div>
         </div>
+        
         <?php if (!$has_categories): ?>
           <small class="text-danger d-block mt-2">No hay categorías: no podrás guardar hasta crear alguna.</small>
         <?php endif; ?>
@@ -251,15 +301,6 @@ $has_categories = count($cats) > 0;
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: min(800px, 95vw);">
     <form method="post" action="subcategories.php" class="modal-content" id="editForm">
-      <style>
-        #editModal .modal-header{padding:18px 22px}
-        #editModal .modal-body{padding:16px 22px}
-        #editModal .modal-footer{padding:12px 22px}
-        #editModal .form-grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px;}
-        @media (max-width: 768px){
-          #editModal .form-grid{grid-template-columns: 1fr;}
-        }
-      </style>
       <div class="modal-header">
         <h5 class="modal-title">Editar subcategoría</h5>
         <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -267,25 +308,31 @@ $has_categories = count($cats) > 0;
       <div class="modal-body">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="sub_category_id" id="e_id">
-        <div class="form-grid">
-          <div class="form-group">
+        
+        <div class="form-group mb-3">
             <label>Nombre</label>
             <input type="text" name="sub_category_name" id="e_name" class="form-control" required>
-          </div>
-          <div class="form-group">
+        </div>
+        
+        <div class="form-group mb-3">
+            <label>Key</label>
+            <input type="text" id="e_key_vis" class="form-control" readonly style="background-color:#e9ecef; border:1px solid #ced4da; color:#6c757d;">
+            <input type="hidden" name="sub_category_key_word" id="e_key">
+        </div>
+
+        <div class="form-group">
             <label>Categoría padre</label>
             <select name="sub_category_father" id="e_father" class="form-control" required>
                 <option value="" disabled>Seleccioná una categoría</option>
                 <?php foreach ($cats as $c): ?>
-                  <option value="<?= (int)$c['category_id'] ?>"><?= htmlspecialchars($c['category_name']) ?></option>
+                    <option value="<?= htmlspecialchars($c['category_key_word']) ?>"><?= htmlspecialchars($c['category_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-          </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light cancel-edit" data-dismiss="modal" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" id="btnEditSave">Actualizar</button>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
       </div>
     </form>
   </div>
@@ -303,19 +350,30 @@ $(function(){
     $('#createForm')[0].reset();
     if (isBS5) { createModal.show(); } else { $('#createModal').modal('show'); }
   });
-  $('.cancel-create, #createModal .btn-close').on('click', function(){
-    if (isBS5) { createModal.hide(); } else { $('#createModal').modal('hide'); }
-  });
-
+  
   $('.btn-edit').on('click', function(){
     var $b = $(this);
     $('#e_id').val($b.data('id'));
     $('#e_name').val($b.data('name'));
-    $('#e_father').val(String($b.data('father')));
+    
+    var key = $b.data('key');
+    $('#e_key').val(key);
+    $('#e_key_vis').val(key);
+    
+    $('#e_father').val($b.data('father-key')); // String key
+    
     if (isBS5) { editModal.show(); } else { $('#editModal').modal('show'); }
   });
-  $('.cancel-edit, #editModal .btn-close').on('click', function(){
-    if (isBS5) { editModal.hide(); } else { $('#editModal').modal('hide'); }
+
+  // Simple auto-slugger for Create
+  $('#c_name').on('input', function(){
+     var val = $(this).val();
+     var slug = val.toLowerCase()
+        .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u').replace(/ñ/g, 'n')
+        .replace(/[^a-z0-9 ]/g, '')
+        .replace(/\s+/g, '-');
+     $('#c_key').val(slug);
+     $('#c_key_vis').val(slug);
   });
 });
 </script>

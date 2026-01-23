@@ -72,12 +72,12 @@ class UpdateQuery extends ConditionalQuery {
             } 
             else
             {
-                salir_mant("SQL_5");
+                salir_mant("SQL_5: " . mysqli_error($conn));
             }
         }
         else
         {
-            salir_mant("SQL_6");
+            salir_mant("SQL_6: " . mysqli_error($conn));
         }
     }
 

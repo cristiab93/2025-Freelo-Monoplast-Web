@@ -40,7 +40,7 @@ function salir_mant($text = "No comment")
 {
     $random = rand(1, 999999);
     error_log("SALIR MANT:" . $text . "(ID: ". $random . ")" . "(DNI: ". $_SESSION["user_id"] . ")");
-    salir("¡Ups! Parece que algo salió mal. Intentá nuevamente más tarde." . "(ID: ". $random . ")");
+    salir("¡Ups! Parece que algo salió mal. Intentá nuevamente más tarde." . "(ID: ". $random . ") - Reason: " . $text);
 }
 
 function redirect($page)
@@ -219,6 +219,24 @@ function transformDateToDayAndMonth($dateString) {
 
   $result = $day . ' de ' . $monthNames[(int)$month];
   return $result;
+}
+
+function view_date($dateString) {
+  if (!$dateString || $dateString == '0000-00-00') return '—';
+  
+  $date = DateTime::createFromFormat('Y-m-d', $dateString);
+  if (!$date) return htmlspecialchars($dateString);
+
+  $monthNames = [
+      1 => 'ENE', 2 => 'FEB', 3 => 'MAR', 4 => 'ABR', 5 => 'MAY', 6 => 'JUN',
+      7 => 'JUL', 8 => 'AGO', 9 => 'SEP', 10 => 'OCT', 11 => 'NOV', 12 => 'DIC'
+  ];
+
+  $day = $date->format('d');
+  $month = (int)$date->format('m');
+  $year = $date->format('Y');
+
+  return $day . ' ' . $monthNames[$month] . ' ' . $year;
 }
 
 

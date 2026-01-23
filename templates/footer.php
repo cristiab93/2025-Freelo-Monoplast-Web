@@ -23,3 +23,41 @@
       </div>
     </div>
   </footer>
+
+  <!-- Modal Presupuesto -->
+  <div class="modal fade" id="budgetModal" tabindex="-1" aria-labelledby="budgetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title blue fw-700" id="budgetModalLabel">Enviar Presupuesto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="budgetForm">
+            <div class="mb-3">
+              <label for="budget_nombre" class="form-label blue font14 fw-600">Nombre y Apellido</label>
+              <input type="text" class="form-control rounded-3 border-blue" id="budget_nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+              <label for="budget_email" class="form-label blue font14 fw-600">Email</label>
+              <input type="email" class="form-control rounded-3 border-blue" id="budget_email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="budget_telefono" class="form-label blue font14 fw-600">Teléfono</label>
+              <input type="tel" class="form-control rounded-3 border-blue" id="budget_telefono" name="telefono" required>
+            </div>
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary rounded-5 px-5 py-2">Enviar</button>
+            </div>
+          </form>
+          <div id="budgetResponse" class="mt-3 text-center blue font14 fw-600" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 2000;">
+    <!-- Toasts dynamically generated here -->
+  </div>
+
+  <script src="js/cart.js"></script>

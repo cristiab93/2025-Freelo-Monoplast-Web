@@ -225,12 +225,12 @@ class SelectQuery extends ConditionalQuery {
             } 
             else
             {
-                salir_mant("SQL_1");
+                salir_mant("SQL_1: " . mysqli_error($conn));
             }
         }
         else
         {
-            salir_mant("SQL_2");
+            salir_mant("SQL_2: " . mysqli_error($conn));
         }
     }
 

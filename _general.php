@@ -11,7 +11,7 @@ require_once("conn/sed.php");
 require_once("conn/get-time.php");
 
 mysqli_report(MYSQLI_REPORT_ERROR);
-($conn = mysqli_connect(DBSERVERNAME, DBUSERNAME, DBPASSWORD, DBNAME)) || salir_mant();
+($conn = mysqli_connect(DBSERVERNAME, DBUSERNAME, DBPASSWORD, DBNAME)) || salir_mant("DB_CONNECT_FAIL: " . mysqli_connect_error());
 mysqli_set_charset($conn, 'utf8mb4');
 mysqli_query($conn, "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
 $_SESSION["conn"] = $conn;

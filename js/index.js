@@ -40,6 +40,7 @@ $(function () {
       '</div>' +
       '<div class="col-12 col-md-auto mt-3 mt-md-0 d-flex justify-content-center gap-2">' +
       '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4">Ver detalles</a>' +
+      '<button type="button" class="btn btn-primary font13 blue border-blue rounded-5 px-4 add-to-budget" data-id="' + p.enc_id + '" data-name="' + name + '" data-subname="' + sub + '" data-img="' + img + '">Agregar</button>' +
       '</div>' +
       '</div>' +
       '</div>' +

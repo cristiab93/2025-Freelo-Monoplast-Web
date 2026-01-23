@@ -3,13 +3,31 @@ $PAGE = 'admin-categories';
 include('../_general.php');
 
 /* ------------ helpers ------------ */
-function category_exists($name, $exclude_id = 0){
+function category_exists($name, $keyword, $exclude_id = 0){
     $name = trim($name);
-    if ($name === '') return false;
+    $keyword = trim($keyword);
+    
+    // Check name
     $q = SelectQuery('categories')->Condition('LOWER(category_name) =', 's', mb_strtolower($name, 'UTF-8'));
     if ($exclude_id > 0) $q->Condition('category_id <>', 'i', (int)$exclude_id);
     $r = $q->Limit(1)->Run();
-    return !empty($r);
+    if (!empty($r)) return 'name_dup';
+
+    // Check keyword
+    if ($keyword !== '') {
+        $q2 = SelectQuery('categories')->Condition('category_key_word =', 's', $keyword);
+        if ($exclude_id > 0) $q2->Condition('category_id <>', 'i', (int)$exclude_id);
+        $r2 = $q2->Limit(1)->Run();
+        if (!empty($r2)) return 'key_dup';
+    }
+
+    return false;
+}
+
+function count_products_in_category($keyword) {
+    if (trim($keyword) === '') return 0;
+    $rows = SelectQuery('products')->Condition('product_category =', 's', $keyword)->Run();
+    return is_array($rows) ? count($rows) : 0;
 }
 
 /* ------------ acciones CRUD ------------ */
@@ -18,11 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'create') {
         $name = trim($_POST['category_name'] ?? '');
-        if ($name === '') { header('Location: categories.php?m=invalid'); exit; }
-        if (category_exists($name)) { header('Location: categories.php?m=dup'); exit; }
+        $key  = trim($_POST['category_key_word'] ?? '');
+        
+        if ($name === '' || $key === '') { header('Location: categories.php?m=invalid'); exit; }
+        
+        $dup = category_exists($name, $key);
+        if ($dup === 'name_dup') { header('Location: categories.php?m=dup_name'); exit; }
+        if ($dup === 'key_dup')  { header('Location: categories.php?m=dup_key'); exit; }
 
         InsertQuery('categories')
             ->Value('category_name', 's', $name)
+            ->Value('category_key_word', 's', $key)
             ->Run();
 
         header('Location: categories.php?m=created'); exit;
@@ -31,11 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'update') {
         $id   = (int)($_POST['category_id'] ?? 0);
         $name = trim($_POST['category_name'] ?? '');
-        if ($id <= 0 || $name === '') { header('Location: categories.php?m=invalid'); exit; }
-        if (category_exists($name, $id)) { header('Location: categories.php?m=dup'); exit; }
+        $key  = trim($_POST['category_key_word'] ?? '');
+
+        if ($id <= 0 || $name === '' || $key === '') { header('Location: categories.php?m=invalid'); exit; }
+
+        $dup = category_exists($name, $key, $id);
+        if ($dup === 'name_dup') { header('Location: categories.php?m=dup_name'); exit; }
+        if ($dup === 'key_dup')  { header('Location: categories.php?m=dup_key'); exit; }
 
         UpdateQuery('categories')
             ->Value('category_name', 's', $name)
+            ->Value('category_key_word', 's', $key)
             ->Condition('category_id =', 'i', $id)
             ->Run();
 
@@ -44,8 +74,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete') {
         $id = (int)($_POST['category_id'] ?? 0);
+        // Get keyword first to check products
         if ($id > 0) {
-            DeleteQuery('categories')->Condition('category_id =','i',$id)->Run();
+            $curr = SelectQuery('categories')->Condition('category_id =','i',$id)->Limit(1)->Run();
+            if ($curr && is_array($curr)) {
+                $row = array_values($curr)[0];
+                $key = $row['category_key_word'];
+                
+                $count = count_products_in_category($key);
+                if ($count > 0) {
+                    header('Location: categories.php?m=has_products'); exit;
+                }
+
+                DeleteQuery('categories')->Condition('category_id =','i',$id)->Run();
+            }
         }
         header('Location: categories.php?m=deleted'); exit;
     }
@@ -69,19 +111,17 @@ $categories = is_array($rows) ? array_values($rows) : [];
     <script src="../js/jquery-3.5.1.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
 
-    <!-- Font Awesome 5 + v4-shims (sin integrity) -->
+    <!-- Font Awesome 5 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/v4-shims.min.css">
 
-    <!-- Admin styles existentes -->
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="css/admin.css" type="text/css">
 
     <style>
-        /* Margen para no chocar con el sidebar fijo */
         .contenidoAdmin{
-            padding: 20px 16px 60px 84px; /* 84px a izquierda = ancho del menú + aire */
-            max-width: 1000px;            /* más angosto que productos, por simplicidad */
+            padding: 20px 16px 60px 84px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         .inicioAdmin.jumbotron{
@@ -94,7 +134,7 @@ $categories = is_array($rows) ? array_values($rows) : [];
     </style>
 </head>
 <body>
-<?php ShowAdminNavBar('nav-categories'); /* usamos el mismo nav simple (Inicio / Productos) */ ?>
+<?php ShowAdminNavBar('nav-categories'); ?>
 
 <div class="area"></div>
 
@@ -107,39 +147,48 @@ $categories = is_array($rows) ? array_values($rows) : [];
       </button>
     </div>
 
-    <?php if (isset($_GET['m']) && $_GET['m'] === 'created'): ?>
-      <div class="alert alert-success mt-3">Categoría creada</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'updated'): ?>
-      <div class="alert alert-info mt-3">Categoría actualizada</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'deleted'): ?>
-      <div class="alert alert-warning mt-3">Categoría eliminada</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'invalid'): ?>
-      <div class="alert alert-danger mt-3">Datos incompletos</div>
-    <?php elseif (isset($_GET['m']) && $_GET['m'] === 'dup'): ?>
-      <div class="alert alert-danger mt-3">Ya existe una categoría con ese nombre</div>
+    <?php if (isset($_GET['m'])): ?>
+        <?php if ($_GET['m'] === 'created'): ?>
+          <div class="alert alert-success mt-3">Categoría creada</div>
+        <?php elseif ($_GET['m'] === 'updated'): ?>
+          <div class="alert alert-info mt-3">Categoría actualizada</div>
+        <?php elseif ($_GET['m'] === 'deleted'): ?>
+          <div class="alert alert-warning mt-3">Categoría eliminada</div>
+        <?php elseif ($_GET['m'] === 'invalid'): ?>
+          <div class="alert alert-danger mt-3">Datos incompletos</div>
+        <?php elseif ($_GET['m'] === 'dup_name'): ?>
+          <div class="alert alert-danger mt-3">Ya existe una categoría con ese nombre</div>
+        <?php elseif ($_GET['m'] === 'dup_key'): ?>
+          <div class="alert alert-danger mt-3">Ya existe una categoría con esa KEY (identificador)</div>
+        <?php elseif ($_GET['m'] === 'has_products'): ?>
+          <div class="alert alert-danger mt-3">No se puede eliminar: Hay productos asociados a esta categoría.</div>
+        <?php endif; ?>
     <?php endif; ?>
 
     <div class="table-wrap mt-3">
       <table class="table table-bordered table-hover mb-0">
         <thead>
           <tr>
-            <th style="width:100px">ID</th>
+            <th style="width:80px">ID</th>
             <th>Nombre</th>
-            <th style="width:230px">Acciones</th>
+            <th>Key (Identificador)</th>
+            <th style="width:200px">Acciones</th>
           </tr>
         </thead>
         <tbody>
         <?php if (!count($categories)): ?>
-          <tr><td colspan="3">No hay categorías cargadas</td></tr>
+          <tr><td colspan="4">No hay categorías cargadas</td></tr>
         <?php else: foreach ($categories as $c): ?>
           <tr>
             <td><?= (int)$c['category_id'] ?></td>
             <td><?= htmlspecialchars($c['category_name'] ?? '') ?></td>
+            <td><code><?= htmlspecialchars($c['category_key_word'] ?? '') ?></code></td>
             <td>
               <button
                 class="btn btn-sm btn-secondary btn-edit"
                 data-id="<?= (int)$c['category_id'] ?>"
                 data-name="<?= htmlspecialchars($c['category_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                data-key="<?= htmlspecialchars($c['category_key_word'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                 type="button">
                 Editar
               </button>
@@ -163,26 +212,28 @@ $categories = is_array($rows) ? array_values($rows) : [];
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: min(700px, 95vw);">
     <form method="post" action="categories.php" class="modal-content" id="createForm">
-      <style>
-        #createModal .modal-header{padding:18px 22px}
-        #createModal .modal-body{padding:16px 22px}
-        #createModal .modal-footer{padding:12px 22px}
-      </style>
       <div class="modal-header">
         <h5 class="modal-title">Nueva categoría</h5>
         <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         <input type="hidden" name="action" value="create">
+        <div class="form-group mb-3">
+            <label>Nombre</label>
+            <input type="text" name="category_name" id="c_name" class="form-control" required>
+        </div>
         <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" name="category_name" id="c_name" class="form-control" placeholder="Nombre de la categoría" required>
-          <small class="text-muted">Debe ser único.</small>
+            <label>Key (Identificador único)</label>
+            <!-- Visual only -->
+            <input type="text" id="c_key_vis" class="form-control" readonly style="background-color:#e9ecef; border:1px solid #ced4da; color:#6c757d;">
+            <!-- Hidden value sent to server -->
+            <input type="hidden" name="category_key_word" id="c_key">
+            <small class="text-muted">Se genera automáticamente.</small>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light cancel-create" data-dismiss="modal" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" id="btnCreateSave">Guardar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
       </div>
     </form>
   </div>
@@ -192,11 +243,6 @@ $categories = is_array($rows) ? array_values($rows) : [];
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: min(700px, 95vw);">
     <form method="post" action="categories.php" class="modal-content" id="editForm">
-      <style>
-        #editModal .modal-header{padding:18px 22px}
-        #editModal .modal-body{padding:16px 22px}
-        #editModal .modal-footer{padding:12px 22px}
-      </style>
       <div class="modal-header">
         <h5 class="modal-title">Editar categoría</h5>
         <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -204,14 +250,19 @@ $categories = is_array($rows) ? array_values($rows) : [];
       <div class="modal-body">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="category_id" id="e_id">
+        <div class="form-group mb-3">
+            <label>Nombre</label>
+            <input type="text" name="category_name" id="e_name" class="form-control" required>
+        </div>
         <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" name="category_name" id="e_name" class="form-control" required>
+            <label>Key</label>
+            <input type="text" id="e_key_vis" class="form-control" readonly style="background-color:#e9ecef; border:1px solid #ced4da; color:#6c757d;">
+            <input type="hidden" name="category_key_word" id="e_key">
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light cancel-edit" data-dismiss="modal" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" id="btnEditSave">Actualizar</button>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
       </div>
     </form>
   </div>
@@ -229,18 +280,31 @@ $(function(){
     $('#createForm')[0].reset();
     if (isBS5) { createModal.show(); } else { $('#createModal').modal('show'); }
   });
-  $('.cancel-create, #createModal .btn-close').on('click', function(){
-    if (isBS5) { createModal.hide(); } else { $('#createModal').modal('hide'); }
-  });
-
+  
   $('.btn-edit').on('click', function(){
     var $b = $(this);
     $('#e_id').val($b.data('id'));
     $('#e_name').val($b.data('name'));
+    
+    var key = $b.data('key');
+    $('#e_key').val(key);
+    $('#e_key_vis').val(key);
+    
     if (isBS5) { editModal.show(); } else { $('#editModal').modal('show'); }
   });
-  $('.cancel-edit, #editModal .btn-close').on('click', function(){
-    if (isBS5) { editModal.hide(); } else { $('#editModal').modal('hide'); }
+
+  // Auto-slugger for Create
+  $('#c_name').on('input', function(){
+     var val = $(this).val();
+     // Slugify: lowercase, remove special chars, replace spaces with -
+     // Keep accents handling simple or matching PHP make_slug
+     var slug = val.toLowerCase()
+        .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u').replace(/ñ/g, 'n')
+        .replace(/[^a-z0-9 ]/g, '')
+        .replace(/\s+/g, '-');
+     
+     $('#c_key').val(slug);
+     $('#c_key_vis').val(slug);
   });
 });
 </script>

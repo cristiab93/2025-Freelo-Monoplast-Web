@@ -178,26 +178,43 @@ $msg = '';
 
 // EJECUTAR MIGRACIÓN
 if (isset($_POST['migrate']) && $_POST['migrate'] === '1') {
+    // 1. Truncate table products
+    mysqli_query($conn, "TRUNCATE TABLE products");
+    
+    // 2. Fetch all from p
     $qAll = "SELECT * FROM p";
     $rAll = mysqli_query($conn, $qAll);
     $count = 0;
+    
+    $today = date('Y-m-d');
+    
     while ($row = mysqli_fetch_assoc($rAll)) {
         $res = resolve_category_from_path($row['categorias_path'] ?? '');
-        if ($res['cat']) {
-            // Actualizar tabla products
-            // Usamos product_id como clave (asumiendo que coinciden)
-            $pid = (int)$row['product_id'];
-            $c = $res['cat'];
-            $s = $res['sub'];
-            
-            // Verificar si el producto existe en 'products' antes de hacer update (opcional)
-            // Hacemos UPDATE directo
-            $upd = "UPDATE products SET product_category = '$c', product_subcategory = '$s' WHERE product_id = $pid";
-            mysqli_query($conn, $upd);
-            $count++;
-        }
+        
+        $pid   = (int)$row['product_id'];
+        $name  = $row['nombre'] ?? '';
+        $sub   = $row['descripcion_corta'] ?? '';
+        $desc  = $row['descripcion_larga'] ?? '';
+        $size  = $row['medidas'] ?? '';
+        $img   = $row['imagen_destacada_url'] ?? ''; // Assuming this maps to product_img
+        $cat   = $res['cat'];
+        $subcat= $res['sub'];
+
+        // Insert using InsertQuery
+        InsertQuery("products")
+            ->Value("product_name", "s", $name)
+            ->Value("product_subname", "s", $sub)
+            ->Value("product_description", "s", $desc)
+            ->Value("product_size", "s", $size)
+            ->Value("product_img", "s", $img)
+            ->Value("product_category", "s", $cat)
+            ->Value("product_subcategory", "s", $subcat)
+            ->Value("product_date", "s", $today)
+            ->Run();
+
+        $count++;
     }
-    $msg = "Se actualizaron $count productos exitosamente.";
+    $msg = "Se migraron $count productos exitosamente (La tabla fue reiniciada).";
 }
 
 
@@ -246,18 +263,13 @@ while ($r = mysqli_fetch_assoc($result)) {
         <table class="table table-bordered table-sm">
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Slug</th>
-                    <th>Desc. Corta</th>
-                    <th>Desc. Larga</th>
-                    <th>Precio</th>
-                    <th>Medidas</th>
-                    <th>Categorias Path (Original)</th>
-                    <th>Cat Detectada (Slug)</th>
-                    <th>Sub Detectada (Slug)</th>
-                    <th class="bg-primary text-white">Cat Final</th>
-                    <th class="bg-primary text-white">Sub Final</th>
+                    <th>product_id</th>
+                    <th>product_name</th>
+                    <th>product_subname</th>
+                    <th>product_description</th>
+                    <th>product_size</th>
+                    <th>product_category</th>
+                    <th>product_subcategory</th>
                 </tr>
             </thead>
             <tbody>
@@ -265,13 +277,9 @@ while ($r = mysqli_fetch_assoc($result)) {
                 <tr>
                     <td><?= $row['product_id'] ?></td>
                     <td><?= htmlspecialchars($row['nombre']) ?></td>
-                    <td class="small"><?= htmlspecialchars($row['slug']) ?></td>
-                    <td class="small text-truncate" style="max-width: 150px;" title="<?= htmlspecialchars($row['descripcion_corta']) ?>"><?= htmlspecialchars($row['descripcion_corta']) ?></td>
-                    <td class="small text-truncate" style="max-width: 150px;" title="<?= htmlspecialchars($row['descripcion_larga']) ?>"><?= htmlspecialchars($row['descripcion_larga']) ?></td>
-                    <td><?= htmlspecialchars($row['precio_actual']) ?></td>
+                    <td class="small"><?= htmlspecialchars($row['descripcion_corta']) ?></td>
+                    <td class="small"><?= htmlspecialchars($row['descripcion_larga']) ?></td>
                     <td><?= htmlspecialchars($row['medidas']) ?></td>
-
-                    <td class="small text-muted"><?= htmlspecialchars($row['categorias_path']) ?></td>
                     
                     <td class="<?= $row['found_cat'] ? 'text-success fw-bold' : 'text-danger' ?>">
                         <?= $row['found_cat'] ?: '?' ?>
@@ -279,9 +287,6 @@ while ($r = mysqli_fetch_assoc($result)) {
                     <td class="<?= $row['found_sub'] ? 'text-success' : 'text-warning' ?>">
                         <?= $row['found_sub'] ?: '-' ?>
                     </td>
-                    
-                    <td><?= $row['found_cat_name'] ?></td>
-                    <td><?= $row['found_sub_name'] ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>

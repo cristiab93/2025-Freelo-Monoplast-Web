@@ -451,10 +451,32 @@ p {
 }
 
 .form-control:focus {
-    background-color: #5983bd !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     box-shadow: none;
     color: #FFFFFF;
-    border-color: #5983bd;
+    border-color: #FFFFFF;
+}
+
+/* Specific fix for search input to prevent blue background */
+.search-box input.form-control:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Prevent browser autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+    -webkit-text-fill-color: #fff !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.highlight {
+    background-color: yellow;
+    color: black;
+    padding: 0 2px;
+    border-radius: 2px;
 }
 
 .search-box input::placeholder {
@@ -502,6 +524,7 @@ a.btn.dropdown-toggle {
     min-height: 48px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

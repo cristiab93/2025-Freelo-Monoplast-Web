@@ -12,7 +12,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim() }
+  function highlightText(text, query) {
+    if (!query) return text;
+    var nText = norm(text);
+    var nQuery = norm(query);
+    if (!nQuery || !nText.includes(nQuery)) return text;
+
+    var result = "";
+    var lastIndex = 0;
+    var index = nText.indexOf(nQuery);
+
+    while (index !== -1) {
+      result += text.substring(lastIndex, index);
+      // We use nQuery.length because norm() preserves character count for these accents/ñ
+      var match = text.substring(index, index + nQuery.length);
+      result += '<mark class="highlight">' + match + '</mark>';
+      lastIndex = index + nQuery.length;
+      index = nText.indexOf(nQuery, lastIndex);
+    }
+    result += text.substring(lastIndex);
+    return result;
+  }
   function initialCat() { var p = new URLSearchParams(window.location.search); var c = p.get("cat"); if (!c) return ""; c = norm(c); var v = ["calefaccion", "piletas", "artefactos", "construccion", "infraestructura", "riego"]; return v.includes(c) ? c : "" }
+  function initialSearch() { var p = new URLSearchParams(window.location.search); return p.get("search") || ""; }
 
   var grid = document.getElementById("grid-productos");
   var pillsUl = document.getElementById("pills-tab");
@@ -23,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var ALL = [], MAP = {}, REV = {}, SUBS_BY_CAT = {};
   var currentCategory = initialCat() || "calefaccion";
   var currentSubcat = "";
+  var currentSearch = initialSearch();
   var currentPage = 1;
   var perPage = 12;
   var totalPages = 1;
@@ -31,11 +54,31 @@ document.addEventListener("DOMContentLoaded", function () {
   function rebuildReverse() { REV = {}; Object.keys(MAP || {}).forEach(function (k) { var v = MAP[k] || ""; REV[norm(v)] = k }) }
   function keyFromSliderText(text) { var t = norm(text); if (REV[t]) return REV[t]; var best = ""; Object.keys(REV).forEach(function (d) { if (!best && t.indexOf(d) >= 0) best = REV[d] }); if (best) return best; if (t.includes("artefactos") || t.includes("mamparas")) return "artefactos"; if (t.includes("construccion")) return "construccion"; if (t.includes("infraestructura")) return "infraestructura"; if (t.includes("piletas")) return "piletas"; if (t.includes("calefaccion")) return "calefaccion"; if (t.includes("riego")) return "riego"; return "calefaccion" }
 
-  function setTitle() { if (!titleEl) return; var d = (MAP && MAP[currentCategory]) ? MAP[currentCategory] : "Productos"; titleEl.textContent = d }
+  function setTitle() {
+    if (!titleEl) return;
+    if (currentSearch) {
+      titleEl.textContent = 'Búsqueda: ' + currentSearch;
+    } else {
+      var d = (MAP && MAP[currentCategory]) ? MAP[currentCategory] : "Productos";
+      titleEl.textContent = d
+    }
+  }
 
   function filterProducts() {
-    var list = ALL.filter(function (p) { return p.category === currentCategory });
-    if (currentSubcat) list = list.filter(function (p) { return (p.subcategory || "") === currentSubcat });
+    var searchQuery = norm(currentSearch);
+    var list = ALL;
+
+    if (searchQuery) {
+      list = list.filter(function (p) {
+        var n = norm(p.name || "");
+        var c = norm(p.category_text || "");
+        var s = norm(p.subcategory || "");
+        return n.includes(searchQuery) || c.includes(searchQuery) || s.includes(searchQuery);
+      });
+    } else {
+      list = list.filter(function (p) { return p.category === currentCategory });
+      if (currentSubcat) list = list.filter(function (p) { return (p.subcategory || "") === currentSubcat });
+    }
     return list
   }
 
@@ -44,6 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var img = p.image || "uploaded_img/ariston.png";
     var name = p.name || "";
     var subn = p.subname || "";
+
+    var displayName = currentSearch ? highlightText(name, currentSearch) : name;
+    var displaySubname = currentSearch ? highlightText(subn, currentSearch) : subn;
+
     return '' +
       '<div class="col-12 col-sm-6 col-lg-4 col-xl-3 mt-3">' +
       '<div class="card border-0 position-relative px-3 py-4 h-100">' +
@@ -51,11 +98,12 @@ document.addEventListener("DOMContentLoaded", function () {
       '<img src="' + img + '" class="img-fluid px-5">' +
       '<div class="row align-items-center mt-2">' +
       '<div class="col-12 text-center text-md-start">' +
-      '<p class="blue mb-1 fw-700 text-uppercase mt-2 product-title">' + name + '</p>' +
-      '<p class="blue mb-0 font13">' + subn + '</p>' +
+      '<p class="blue mb-1 fw-700 text-uppercase mt-2 product-title">' + displayName + '</p>' +
+      '<p class="blue mb-0 font13">' + displaySubname + '</p>' +
       '</div>' +
-      '<div class="col-12 mt-3 d-flex justify-content-center justify-content-md-start">' +
+      '<div class="col-12 mt-3 d-flex justify-content-center justify-content-md-start gap-2">' +
       '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4">Ver detalles</a>' +
+      '<button type="button" class="btn btn-primary font13 blue border-blue rounded-5 px-4 add-to-budget" data-id="' + (p.eid || "") + '" data-name="' + name + '" data-subname="' + subn + '" data-img="' + img + '">Agregar</button>' +
       '</div>' +
       '</div>' +
       '</div>' +
@@ -132,11 +180,17 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".slideProdInterna .swiper-slide").forEach(function (slide) {
     slide.addEventListener("click", function () {
       var h2 = slide.querySelector("h2"); var text = h2 ? h2.textContent : "";
+      currentSearch = "";
       currentCategory = keyFromSliderText(text);
       currentSubcat = "";
       allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
       currentPage = 1;
+      // Update browser URL without reload to clear search
+      var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?cat=' + currentCategory;
+      window.history.pushState({ path: newUrl }, '', newUrl);
+
       render();
+      scrollToResults();
 
       // Mover el slide clickeado a la primera posición
       var idx = slide.getAttribute("data-swiper-slide-index");
@@ -145,6 +199,20 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     })
   });
+
+  function scrollToResults() {
+    const target = document.getElementById('titulo-categoria');
+    if (target) {
+      const offset = 120; // Adjust for sticky header
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  }
 
   function selectInitialSlide() {
     if (!swiperInstance) return;
@@ -172,6 +240,11 @@ document.addEventListener("DOMContentLoaded", function () {
       allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
       render();
       selectInitialSlide();
+
+      // Auto-scroll to results if there is a search active
+      if (currentSearch) {
+        scrollToResults();
+      }
     })
     .fail(function () {
       ALL = []; MAP = {}; SUBS_BY_CAT = {};

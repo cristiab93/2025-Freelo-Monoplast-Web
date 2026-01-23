@@ -14,13 +14,14 @@ $last_date = '';
 foreach ($rows as $r) {
     $c = trim($r['product_category'] ?? '');
     if ($c !== '') $cat[$c] = true;
-
-    $d = trim($r['product_date'] ?? '');
-    if ($d !== '') {
-        if ($last_date === '' || $d > $last_date) $last_date = $d;
-    }
 }
-$total_categories = count($cat);
+// Conteo real de categorías desde la tabla categories
+$cat_rows = SelectQuery('categories')->Run();
+$total_categories = is_array($cat_rows) ? count($cat_rows) : 0;
+
+// subcategorías totales
+$sub_rows = SelectQuery('sub_categories')->Run();
+$total_subcategories = is_array($sub_rows) ? count($sub_rows) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -72,19 +73,19 @@ $total_categories = count($cat);
             <div class="col-12 col-md-4">
                 <div class="metric-card">
                     <div class="metric-number"><?= (int)$total_products ?></div>
-                    <div class="metric-label">Productos cargados</div>
+                    <div class="metric-label">Productos</div>
                 </div>
             </div>
             <div class="col-12 col-md-4">
                 <div class="metric-card">
                     <div class="metric-number"><?= (int)$total_categories ?></div>
-                    <div class="metric-label">Categorías detectadas</div>
+                    <div class="metric-label">Categorías</div>
                 </div>
             </div>
             <div class="col-12 col-md-4">
                 <div class="metric-card">
-                    <div class="metric-number"><?= htmlspecialchars($last_date ?: '—') ?></div>
-                    <div class="metric-label">Última fecha de alta</div>
+                    <div class="metric-number"><?= (int)$total_subcategories ?></div>
+                    <div class="metric-label">Subcategorías</div>
                 </div>
             </div>
         </div>

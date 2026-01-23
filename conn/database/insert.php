@@ -59,12 +59,12 @@ class InsertQuery extends Query {
             } 
             else
             {
-                salir_mant("SQL_3");
+                salir_mant("SQL_3: " . mysqli_error($conn));
             }
         }
         else
         {
-            salir_mant("SQL_4");
+            salir_mant("SQL_4: " . mysqli_error($conn));
         }
     }
 
