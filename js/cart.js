@@ -172,7 +172,7 @@ function updateSidebar(cart) {
                 <div class="ms-3 flex-grow-1">
                     <p class="blue fw-700 mb-0 font14">${item.name}</p>
                     <p class="blue font12 mb-0">${item.subname}</p>
-                    <a href="javascript:void(0)" class="remove-item font14 fw-700 text-danger" data-id="${item.id}">Eliminar</a>
+                    <a href="javascript:void(0)" class="remove-item font11 fw-700 text-danger" data-id="${item.id}">Eliminar</a>
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-between qty-container ms-3">
                     <button class="qty-btn qty-btn-plus" type="button" data-id="${item.id}">+</button>

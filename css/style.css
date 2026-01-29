@@ -81,6 +81,8 @@ a.nav-link {
     background-color: #F5F5F5;
 }
 
+.bg-grey {background-color: #F5F5F5;}
+
 .multiply {
     mix-blend-mode: multiply;
 }
@@ -536,18 +538,15 @@ a.btn.dropdown-toggle {
     content: none !important;
 }
 
+.product-title {
+    font-size: 15px;
+    line-height: 18px;
+}
+
 .buscados .card {
     border-radius: 20px;
 }
 
-.buscados .card .product-title {
-    min-height: 48px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
 
 .buscados .card img {
     mix-blend-mode: multiply;
@@ -935,10 +934,6 @@ a.btn.dropdown-toggle {
         line-height: 53px;
     }
 
-    .buscados .card {
-
-        min-height: 370px;
-    }
 
     .bg-contacto {
         padding: 130px 0 90px;
@@ -974,6 +969,8 @@ a.btn.dropdown-toggle {
         font-size: 41px;
         line-height: 44px;
     }
+ #relacionados .card.bg-grey .btn {width: 100%; justify-content: center; margin-bottom: 10px;}
+    #mas-buscados .card.bg-grey .btn {width: 100%; justify-content: center; margin-bottom: 10px;}
 }
 
 @media (max-width: 576px) {

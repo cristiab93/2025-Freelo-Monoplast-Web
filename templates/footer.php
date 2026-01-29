@@ -28,8 +28,8 @@
   <div class="modal fade" id="budgetModal" tabindex="-1" aria-labelledby="budgetModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 border-0 shadow">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title blue fw-700" id="budgetModalLabel">Enviar Presupuesto</h5>
+        <div class="modal-header">
+          <h5 class="modal-title blue" id="budgetModalLabel">Presupuesto</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body p-4">
@@ -47,7 +47,7 @@
               <input type="tel" class="form-control rounded-3 border-blue" id="budget_telefono" name="telefono" required>
             </div>
             <div class="text-center mt-4">
-              <button type="submit" class="btn btn-primary rounded-5 px-5 py-2">Enviá</button>
+              <button type="submit" class="btn btn-primary rounded-5 px-5 py-2">Enviar</button>
             </div>
           </form>
           <div id="budgetResponse" class="mt-3 text-center blue font14 fw-600" style="display:none;"></div>

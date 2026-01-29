@@ -105,7 +105,7 @@ include_once ("_general.php");
         </div>
         <div class="swiper-slide bg-slide-3">
           <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
-            <h1 class="mb-0 kento">Nuestras <br>mamparas</h1>
+            <h1 class="mb-0 kento">Conseguí <br>tu mampara</h1>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@ include_once ("_general.php");
     <div class="container">
       <div class="row">
         <div class="col-md-12 offset-md-0 col-10 offset-1 border-bottom border-blue mb-4">
-          <p class="blue mb-2 fw-600">Más buscados</p>
+          <p class="blue mb-2 fw-600 font20">Más buscados</p>
         </div>
       </div>
       <div id="mas-buscados" class="row"></div>
@@ -131,12 +131,12 @@ include_once ("_general.php");
         <div class="col-10 offset-1 offset-md-0 col-md-6">
           <div class="swiper slideProductos py-5">
             <div class="swiper-wrapper">
-              <div class="swiper-slide bg-producto1"><div class="tag-producto white bg-blue2 rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Calefacción</div></div>
-              <div class="swiper-slide bg-producto2"><div class="tag-producto white bg-blue2 rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Piletas</div></div>
-              <div class="swiper-slide bg-producto3"><div class="tag-producto white bg-blue2 rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Artefactos y mamparas</div></div>
-              <div class="swiper-slide bg-producto4"><div class="tag-producto white bg-blue2 rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Construcción</div></div>
-              <div class="swiper-slide bg-producto5"><div class="tag-producto white bg-blue2 rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Infraestructura</div></div>
-              <div class="swiper-slide bg-producto6"><div class="tag-producto white bg-blue2 rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Sistemas de riego</div></div>
+              <div class="swiper-slide bg-producto1"><div class="tag-producto white bg-blue rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Calefacción</div></div>
+              <div class="swiper-slide bg-producto2"><div class="tag-producto white bg-blue rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Piletas</div></div>
+              <div class="swiper-slide bg-producto3"><div class="tag-producto white bg-blue rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Artefactos y mamparas</div></div>
+              <div class="swiper-slide bg-producto4"><div class="tag-producto white bg-blue rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Construcción</div></div>
+              <div class="swiper-slide bg-producto5"><div class="tag-producto white bg-blue rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Infraestructura</div></div>
+              <div class="swiper-slide bg-producto6"><div class="tag-producto white bg-blue rounded-5 font14 fit-content border px-4 py-2 me-3 mt-3 ms-auto ls-05">Sistemas de riego</div></div>
             </div>
             <div class="swiper-pagination"></div>
           </div>
@@ -162,7 +162,7 @@ include_once ("_general.php");
             <div class="swiper-wrapper mb-5">
               <div class="swiper-slide text-start">
                 <div class="bg-servicio bg-producto6"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-riego.svg" height="100"></div></div>
-                <div class="pe-5"><h3 class="blue fw-700 mt-3">Instalacion de riego por aspersión</h3><p class="blue font13 fw-400">Sistemas de riego para canchas de Fútbol, canchas de Golf, Jardines, etc</p></div>
+                <div class="pe-5"><h3 class="blue fw-700 mt-3">Instalación de riego <br class="d-none d-lg-block">por aspersión</h3><p class="blue font13 fw-400">Sistemas de riego para canchas de Fútbol, canchas de Golf, Jardines, etc</p></div>
               </div>
               <div class="swiper-slide text-start">
                 <div class="bg-servicio bg-servicio3"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-pileta.svg" height="95"></div></div>
@@ -184,11 +184,11 @@ include_once ("_general.php");
     </div>
   </section>
 
-  <section class="bg-light py-5">
+  <section class="bg-white py-5">
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 col-md-12 offset-md-0 text-center">
-          <h4 class="blue-light fw-600 mb-5">La mejor atención al <br class="d-none d-md-block">cliente y servicio <br class="d-none d-md-block"> post-venta del mercado</h4>
+          <h4 class="blue-light fw-600 mb-5">La mejor atención al cliente y servicio <br class="d-none d-md-block"> post-venta del mercado</h4>
           <script src="https://elfsightcdn.com/platform.js" async></script>
           <!-- Elfsight Google Reviews | Monoplast -->
 <div class="elfsight-app-cfa65342-c921-4095-90bd-0db03d20cb77" data-elfsight-app-lazy></div>

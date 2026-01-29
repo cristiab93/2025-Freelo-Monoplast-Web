@@ -127,13 +127,13 @@ include_once("_general.php");
           <img src="img/placeholder.png" id="zoom-img" class="img-fluid">
         </div>
         <div class="col-10 offset-1 offset-md-0 col-md-5 col-lg-6 offset-lg-1">
-          <h1 id="prod-title" class="blue mb-1 font38 mt-4 mt-md-0 fw-700"></h1>
-          <p id="prod-subtitle" class="blue mb-md-5 mb-4 font20 fw-400"></p>
+          <h1 id="prod-title" class="blue mb-3 font38 mt-4 mt-md-0 fw-500"></h1>
+          <p id="prod-subtitle" class="blue mb-md-5 mb-4 font15 fw-400"></p>
           <ul id="prod-features" class="blue fw-400 ps-3"></ul>
           <form>
             <div class="d-flex mt-md-5 mt-4">
               <input type="number" value="1" min="1" class="form-control rounded-0 border-blue text-center" style="max-width: 80px;">
-              <button class="btn btn-primary border-0 rounded-0 font11 text-white ms-2 px-3" style="white-space: nowrap;" type="button" id="liveToastBtn">Agregar al presupuesto</button>
+              <button class="btn btn-primary border-0 rounded-0 font13 text-white ms-2 px-4" style="white-space: nowrap;" type="button" id="liveToastBtn">Agregar al presupuesto</button>
             </div>
           </form>
         </div>

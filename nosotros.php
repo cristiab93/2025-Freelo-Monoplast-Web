@@ -131,7 +131,7 @@ include_once("_general.php");
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 offset-md-0 col-md-12 text-center">
-          <h4 class="blue-light fw-600 mb-5">La mejor atención al <br class="d-none d-md-block"> cliente y servicio <br class="d-none d-md-block"> post-venta del mercado</h4>
+          <h4 class="blue-light fw-600 mb-5">La mejor atención al cliente y servicio <br class="d-none d-md-block"> post-venta del mercado</h4>
            <script src="https://elfsightcdn.com/platform.js" async></script>
           <!-- Elfsight Google Reviews | Monoplast -->
 <div class="elfsight-app-cfa65342-c921-4095-90bd-0db03d20cb77" data-elfsight-app-lazy></div>
