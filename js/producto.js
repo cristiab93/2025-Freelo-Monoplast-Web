@@ -21,7 +21,7 @@ $(function () {
     return '' +
       '<div class="col-12 col-sm-6 col-lg-4 col-xl-3 mt-4">' +
       '<div class="card bg-grey rounded-4 border-0 position-relative px-3 py-4 h-100 d-flex flex-column">' +
-      '<div class="text-center" style="height: 170px; display: flex; align-items: center; justify-content: center;">' +
+      '<div class="text-center" style="height: 180px; display: flex; align-items: center; justify-content: center;">' +
       '<img src="' + img + '" class="img-fluid multiply" style="max-height: 100%; object-fit: contain;">' +
       '</div>' +
       '<div class="mt-2">' +
