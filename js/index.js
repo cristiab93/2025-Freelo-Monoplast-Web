@@ -34,7 +34,7 @@ $(function () {
     var href = "producto.php?id=" + encodeURIComponent(p.enc_id);
     var html = '' +
       '<div class="col-10 offset-1 offset-sm-0 col-sm-6 col-lg-4 col-xl-3 mt-4">' +
-      '<div class="card bg-grey rounded-4 border-0 position-relative px-3 py-4 h-100 d-flex flex-column">' +
+      '<div class="card bg-grey justify-content-between rounded-4 border-0 position-relative px-3 py-4 h-100 d-flex flex-column">' +
       '<div class="text-center" style="height: 180px; display: flex; align-items: center; justify-content: center;">' +
       '<img src="' + img + '" class="img-fluid multiply" style="max-height: 100%; object-fit: contain;">' +
       '</div>' +
