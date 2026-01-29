@@ -19,15 +19,21 @@ $(function () {
     var href = 'producto.php?id=' + encodeURIComponent(p.eid || '');
     var img = p.image || 'uploaded_img/ariston.png';
     return '' +
-      '<div class="col-12 col-sm-6 col-lg-6 col-xl-3 mt-3">' +
-      '<div class="card bg-light border-0 position-relative rounded-3 px-3 py-4 h-100">' +
-      '<div class="bg-blue tag py-1 px-3"><p class="white fw-500 font11 mb-0">Más buscados</p></div>' +
-      '<img src="' + img + '" class="img-fluid multiply px-sm-0 px-5 px-md-5 mt-3">' +
-      '<p class="blue mb-0 text-uppercase font14 mt-3 fw-700 text-center text-md-start">' + (p.name || '') + '</p>' +
-      '<p class="blue mb-0 font12 mt-1 text-center text-md-start">' + (p.subname || '') + '</p>' +
-      '<div class="d-sm-flex align-items-center text-center justify-content-between mt-3 btn-product">' +
-      '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-xxl-4 px-xl-2 px-md-3 px-sm-2 px-4 mt-md-3 mt-1">Ver detalles</a>' +
-      '<button type="button" class="btn btn-primary font11 blue border-blue rounded-5 px-xxl-4 px-xl-3 px-md-3 px-sm-2 px-4 mt-md-3 mt-2 add-to-budget" data-id="' + (p.eid || '') + '" data-name="' + (p.name || '') + '" data-subname="' + (p.subname || '') + '" data-img="' + img + '">Agregar al presupuesto</button>' +
+      '<div class="col-12 col-sm-6 col-lg-4 col-xl-3 mt-3">' +
+      '<div class="card border-0 position-relative px-3 py-4 h-100 d-flex flex-column">' +
+      '<div class="bg-blue tag py-1 px-3"><p class="white fw-500 font11 mb-0 uppercase">Más buscados</p></div>' +
+      '<div class="text-center mt-3" style="height: 160px; display: flex; align-items: center; justify-content: center;">' +
+      '<img src="' + img + '" class="img-fluid multiply" style="max-height: 100%; object-fit: contain;">' +
+      '</div>' +
+      '<div class="flex-grow-1 mt-2">' +
+      '<div style="height: 52px; display: flex; align-items: center; justify-content: center;" class="justify-content-md-start">' +
+      '<p class="blue mb-0 font14 fw-700 text-center text-md-start leading-tight">' + (p.name || '') + '</p>' +
+      '</div>' +
+      '<p class="blue mb-0 font12 text-center text-md-start">' + (p.subname || '') + '</p>' +
+      '</div>' +
+      '<div class="mt-3 d-flex justify-content-center justify-content-md-start gap-2">' +
+      '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-4 d-flex align-items-center">Ver detalles</a>' +
+      '<button type="button" class="btn btn-primary font11 text-white border-blue rounded-5 px-3 add-to-budget d-flex align-items-center" style="white-space: nowrap;" data-id="' + (p.eid || '') + '" data-name="' + (p.name || '') + '" data-subname="' + (p.subname || '') + '" data-img="' + img + '">Agregar al presupuesto</button>' +
       '</div>' +
       '</div>' +
       '</div>';
@@ -45,9 +51,20 @@ $(function () {
         return;
       }
       var p = resp.product;
-      $('#prod-category').text(p.category || '');
+      var cat = p.category || '';
+      var subcat = p.subcategory || '';
+      var catKey = p.category_key || '';
+      var subcatKey = p.subcategory_key || '';
+
+      var breadHtml = '<a href="productos.php?cat=' + encodeURIComponent(catKey) + '" class="breadcrumb-link">' + cat + '</a>';
+      if (subcat) {
+        breadHtml += '<i class="mdi mdi-chevron-right font14"></i>';
+        breadHtml += '<a href="productos.php?cat=' + encodeURIComponent(catKey) + '&subc=' + encodeURIComponent(subcat) + '" class="breadcrumb-link">' + subcat + '</a>';
+      }
+      $('#prod-breadcrumbs').html(breadHtml);
       $('#zoom-img').attr('src', p.image || 'uploaded_img/ariston.png');
-      $('#prod-title').html((p.name || '') + (p.subname ? '<br>' + p.subname : ''));
+      $('#prod-title').text(p.name || '');
+      $('#prod-subtitle').text(p.subname || '');
       $('#prod-features').html(renderBullets(p.description || ''));
       if (resp.related && resp.related.length) {
         $('#relacionados').html(resp.related.map(renderRelacionado).join(''));

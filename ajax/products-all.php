@@ -19,6 +19,17 @@ foreach ($CATEGORY_MAP as $k => $v) {
   $rev[norm_txt($k)] = $k;
 }
 
+// Subcategory mapping from DB
+$subcat_map = [];
+$sub_res = SelectQuery("sub_categories")->SetIndex(-1)->Run();
+if (is_array($sub_res)) {
+  foreach ($sub_res as $sr) {
+    if (isset($sr['sub_category_key_word']) && isset($sr['sub_category_name'])) {
+      $subcat_map[$sr['sub_category_key_word']] = $sr['sub_category_name'];
+    }
+  }
+}
+
 $sel = SelectQuery("products");
 $sel->SetIndex(-1);
 $sel->Order("product_date", "DESC");
@@ -29,9 +40,7 @@ $products = [];
 $subcats_by_category = [];
 
 foreach ($rows as $r) {
-  $raw = isset($r["product_img"]) ? trim((string)$r["product_img"]) : "";
-  $isAbs = preg_match('/^https?:\/\//i', $raw) || (strlen($raw) && $raw[0] === "/");
-  $img = $raw !== "" ? ($isAbs ? $raw : ("uploaded_img/" . ltrim($raw, "/"))) : "uploaded_img/ariston.png";
+  $img = view_product_img($r["product_img"] ?? '', "uploaded_img/");
 
   $cat_text = $r["product_category"] ?? '';
   $key = '';
@@ -40,13 +49,22 @@ foreach ($rows as $r) {
     if (isset($rev[$n])) $key = $rev[$n];
   }
 
-  $subc = $r["product_subcategory"] ?? '';
+  $subc_raw = $r["product_subcategory"] ?? '';
+  // Get real name from map or use raw key if not found
+  $display_subc = isset($subcat_map[$subc_raw]) ? $subcat_map[$subc_raw] : $subc_raw;
+  $subc = title_case(clean_text($display_subc));
+
+  $subname = isset($r["product_subname"]) ? trim((string)$r["product_subname"]) : "";
+  if ($subname === "" && $subc_raw !== "") {
+    // If subname is missing, use the real name of the subcategory
+    $subname = $display_subc;
+  }
 
   $products[] = [
     "id"            => (int)$r["product_id"],
     "eid"           => sed_encryption((string)$r["product_id"]),
-    "name"          => $r["product_name"] ?? '',
-    "subname"       => $r["product_subname"] ?? '',
+    "name"          => title_case(clean_text($r["product_name"] ?? '')),
+    "subname"       => truncate_text(title_case(clean_text($subname)), 80),
     "category"      => $key,
     "category_text" => $cat_text,
     "subcategory"   => $subc,
@@ -61,6 +79,12 @@ foreach ($rows as $r) {
     }
   }
 }
+
+// Sort subcategories alphabetically for each category
+foreach ($subcats_by_category as $key => &$list) {
+  sort($list, SORT_STRING | SORT_FLAG_CASE);
+}
+unset($list);
 
 echo json_encode([
   "success"            => 1,

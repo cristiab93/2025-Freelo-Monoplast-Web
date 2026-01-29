@@ -4,7 +4,7 @@ include('../_general.php');
 
 /* ====================== helpers ====================== */
 function fetch_categories(){
-    $rows = SelectQuery('categories')->Order('category_name','ASC')->Limit(1000000)->Run();
+    $rows = SelectQuery('categories')->Order('category_name','ASC')->Limit(1000000)->SetIndex(-1)->Run();
     return is_array($rows) ? array_values($rows) : [];
 }
 function cat_exists_by_key($key){
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $sub_rows = SelectQuery('sub_categories')
     ->Order('sub_category_father','ASC')
     ->Order('sub_category_name','ASC')
-    ->Limit(1000000)->Run();
+    ->Limit(1000000)->SetIndex(-1)->Run();
 $subcats = is_array($sub_rows) ? array_values($sub_rows) : [];
 
 $cats = fetch_categories();

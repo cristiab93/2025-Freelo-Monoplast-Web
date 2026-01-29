@@ -1,8 +1,10 @@
 <?php
-$host = 'localhost';
-$user = 'cristianb';
-$pass = '511xpWgxUR4icML4';
-$db   = 'monoplast';
+include_once("../conn/cfg.php");
+
+$host = DBSERVERNAME;
+$user = DBUSERNAME;
+$pass = DBPASSWORD;
+$db   = DBNAME;
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $conn = new mysqli($host, $user, $pass, $db);

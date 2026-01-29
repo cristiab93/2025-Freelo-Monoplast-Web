@@ -2,6 +2,33 @@
 include_once("_general.php");
 ?>
 <?php include_once("templates/head-info.php"); ?>
+    <style>
+      .breadcrumb-link {
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.2s;
+        cursor: pointer;
+      }
+      .breadcrumb-link:hover {
+        opacity: 0.7;
+        color: white;
+      }
+      /* Fix for input focus visibility */
+      .border-blue:focus {
+        color: #0a0338 !important;
+        background-color: #fff !important;
+        outline: none;
+        box-shadow: none;
+      }
+      .border-blue {
+        border-color: #0a0338 !important;
+      }
+      #zoom-img {
+        max-height: 450px;
+        width: 100%;
+        object-fit: contain;
+      }
+    </style>
 </head>
 <body>
  <header id="main-header" class="position-fixed index-9 top-0 start-0 end-0">
@@ -90,7 +117,7 @@ include_once("_general.php");
       <div class="row">
         <div class="col-auto mb-4">
           <div class="bg-blue-light px-4 fw-500 py-2 rounded-5">
-            <p id="prod-category" class="mb-0 font12 text-white"></p>
+            <p id="prod-breadcrumbs" class="mb-0 font12 text-white d-flex align-items-center gap-2"></p>
           </div>
         </div>
       </div>
@@ -100,12 +127,13 @@ include_once("_general.php");
           <img src="img/placeholder.png" id="zoom-img" class="img-fluid">
         </div>
         <div class="col-10 offset-1 offset-md-0 col-md-5 col-lg-6 offset-lg-1">
-          <h3 id="prod-title" class="blue mb-md-5 mb-4 font38 mt-4 mt-md-0"></h3>
+          <h1 id="prod-title" class="blue mb-1 font38 mt-4 mt-md-0 fw-700"></h1>
+          <p id="prod-subtitle" class="blue mb-md-5 mb-4 font20 fw-400"></p>
           <ul id="prod-features" class="blue fw-400 ps-3"></ul>
           <form>
             <div class="d-flex mt-md-5 mt-4">
               <input type="number" value="1" min="1" class="form-control rounded-0 border-blue text-center" style="max-width: 80px;">
-              <button class="btn btn-primary border-0 rounded-0 font13 ms-2 px-4" type="button" id="liveToastBtn">Agregar al presupuesto</button>
+              <button class="btn btn-primary border-0 rounded-0 font11 text-white ms-2 px-3" style="white-space: nowrap;" type="button" id="liveToastBtn">Agregar al presupuesto</button>
             </div>
           </form>
         </div>

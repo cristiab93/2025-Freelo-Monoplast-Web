@@ -240,6 +240,116 @@ function view_date($dateString) {
 }
 
 
+/**
+ * Convert text to title case with Spanish articles/prepositions in lowercase
+ * Example: "PIAZZA DE PORCELANA" -> "Piazza de Porcelana"
+ */
+function title_case($text) {
+  if (empty($text)) return $text;
+  
+  // Articles and prepositions to keep lowercase (unless first or last word)
+  $lowercase_words = [
+    'de', 'del', 'la', 'el', 'los', 'las', 'un', 'una', 'unos', 'unas',
+    'y', 'e', 'o', 'u', 'con', 'sin', 'para', 'por', 'a', 'en', 'sobre',
+    'al', 'desde', 'hasta', 'entre', 'bajo', 'ante', 'contra', 'hacia',
+    'que', 'u'
+  ];
+  
+  // Convert to lowercase first
+  $text = mb_strtolower($text, 'UTF-8');
+  
+  // Split into words by any whitespace
+  $words = preg_split('/(\s+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  
+  $result = [];
+  $words_only_indices = [];
+  
+  // Identify actual words (not whitespace)
+  foreach ($words as $i => $word) {
+    if (!preg_match('/^\s+$/', $word) && $word !== '') {
+      $words_only_indices[] = $i;
+    }
+  }
+  
+  $num_words = count($words_only_indices);
+  
+  foreach ($words as $i => $word) {
+    // Preserve whitespace or empty strings
+    if (preg_match('/^\s+$/', $word) || $word === '') {
+      $result[] = $word;
+      continue;
+    }
+    
+    $word_lower = mb_strtolower($word, 'UTF-8');
+    $word_idx = array_search($i, $words_only_indices);
+    
+    // Capitalize if it's the first word, the last word, or NOT in the lowercase list
+    if ($word_idx === 0 || $word_idx === $num_words - 1 || !in_array($word_lower, $lowercase_words)) {
+      // Capitalize first letter, handle multibyte
+      $first_char = mb_strtoupper(mb_substr($word, 0, 1, 'UTF-8'), 'UTF-8');
+      $rest = mb_substr($word, 1, null, 'UTF-8');
+      $result[] = $first_char . $rest;
+    } else {
+      // Keep lowercase
+      $result[] = $word_lower;
+    }
+  }
+  
+  return implode('', $result);
+}
+
+/**
+ * Clean text: remove HTML tags and decode entities
+ */
+function clean_text($text) {
+  if (empty($text)) return $text;
+  
+  // Decode entities (handling double encoding if necessary)
+  $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  
+  // Remove tags
+  $text = strip_tags($text);
+  
+  // Final trim
+  return trim($text);
+}
+
+/**
+ * Capitalize only the very first letter of a string
+ */
+function capitalize_first($text) {
+  if (empty($text)) return $text;
+  
+  // Find the first alphabetic character and capitalize it
+  // This handles cases like "¡hola" -> "¡Hola"
+  $len = mb_strlen($text, 'UTF-8');
+  for ($i = 0; $i < $len; $i++) {
+    $char = mb_substr($text, $i, 1, 'UTF-8');
+    if (preg_match('/[a-z]/u', mb_strtolower($char, 'UTF-8'))) {
+      $before = mb_substr($text, 0, $i, 'UTF-8');
+      $upper = mb_strtoupper($char, 'UTF-8');
+      $after = mb_substr($text, $i + 1, null, 'UTF-8');
+      return $before . $upper . $after;
+    }
+  }
+  
+  return $text;
+}
+
+/**
+ * Truncate text to a maximum length and append ellipsis if needed
+ */
+function truncate_text($text, $max_chars = 80) {
+  if (empty($text)) return $text;
+  
+  $cleaned = clean_text($text);
+  $cleaned = capitalize_first(trim($cleaned));
+  
+  if (mb_strlen($cleaned, 'UTF-8') <= $max_chars) return $cleaned;
+  
+  return mb_substr($cleaned, 0, $max_chars, 'UTF-8') . '...';
+}
 
 
 
@@ -249,4 +359,18 @@ function view_date($dateString) {
 
 
 
-
+/**
+ * Get product image path/URL.
+ * If raw is empty, returns default ariston.png.
+ * If raw is already an absolute URL or starts with /, returns it as is.
+ * Otherwise, prefixes it with the specified prefix (default uploaded_img/).
+ */
+function view_product_img($raw, $prefix = 'uploaded_img/') {
+  $raw = trim((string)$raw);
+  if ($raw === "") return $prefix . "ariston.png";
+  
+  $isAbs = preg_match('/^https?:\/\//i', $raw) || $raw[0] === "/";
+  if ($isAbs) return $raw;
+  
+  return $prefix . ltrim($raw, "/");
+}

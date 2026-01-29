@@ -86,11 +86,21 @@ if ($is_admin_page && $PAGE !== 'admin-login' && empty($_SESSION['admin_user']))
     exit;
 }
 
-$CATEGORY_MAP = [
-  'calefaccion'    => 'Calefacción',
-  'piletas'        => 'Piletas',
-  'artefactos'     => 'Artefactos y mamparas',
-  'construccion'   => 'Construcción',
-  'infraestructura'=> 'Infraestructura',
-  'riego'          => 'Sistemas de riego',
-];
+$dynamic_cats = SelectQuery("categories")->SetIndex(-1)->Run();
+if (is_array($dynamic_cats) && count($dynamic_cats) > 0) {
+  $CATEGORY_MAP = [];
+  foreach ($dynamic_cats as $c) {
+    if (isset($c['category_key_word']) && isset($c['category_name'])) {
+      $CATEGORY_MAP[$c['category_key_word']] = $c['category_name'];
+    }
+  }
+} else {
+  $CATEGORY_MAP = [
+    'calefaccion'    => 'Calefacción',
+    'piletas'        => 'Piletas',
+    'artefactos'     => 'Artefactos y mamparas',
+    'construccion'   => 'Construcción',
+    'infraestructura'=> 'Infraestructura',
+    'riego'          => 'Sistemas de riego',
+  ];
+}

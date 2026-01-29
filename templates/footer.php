@@ -47,7 +47,7 @@
               <input type="tel" class="form-control rounded-3 border-blue" id="budget_telefono" name="telefono" required>
             </div>
             <div class="text-center mt-4">
-              <button type="submit" class="btn btn-primary rounded-5 px-5 py-2">Enviar</button>
+              <button type="submit" class="btn btn-primary rounded-5 px-5 py-2">Enviá</button>
             </div>
           </form>
           <div id="budgetResponse" class="mt-3 text-center blue font14 fw-600" style="display:none;"></div>

@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return result;
   }
   function initialCat() { var p = new URLSearchParams(window.location.search); var c = p.get("cat"); if (!c) return ""; c = norm(c); var v = ["calefaccion", "piletas", "artefactos", "construccion", "infraestructura", "riego"]; return v.includes(c) ? c : "" }
+  function initialSubcat() { var p = new URLSearchParams(window.location.search); return p.get("subc") || ""; }
   function initialSearch() { var p = new URLSearchParams(window.location.search); return p.get("search") || ""; }
 
   var grid = document.getElementById("grid-productos");
@@ -44,10 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var ALL = [], MAP = {}, REV = {}, SUBS_BY_CAT = {};
   var currentCategory = initialCat() || "calefaccion";
-  var currentSubcat = "";
+  var currentSubcat = initialSubcat();
   var currentSearch = initialSearch();
   var currentPage = 1;
-  var perPage = 12;
+  var perPage = 50;
   var totalPages = 1;
   var allSubcats = [];
 
@@ -73,7 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var n = norm(p.name || "");
         var c = norm(p.category_text || "");
         var s = norm(p.subcategory || "");
-        return n.includes(searchQuery) || c.includes(searchQuery) || s.includes(searchQuery);
+
+        return n.includes(searchQuery) || c.includes(searchQuery) || s.includes(searchQuery) || norm(p.category || "").includes(searchQuery);
       });
     } else {
       list = list.filter(function (p) { return p.category === currentCategory });
@@ -93,21 +95,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return '' +
       '<div class="col-12 col-sm-6 col-lg-4 col-xl-3 mt-3">' +
-      '<div class="card border-0 position-relative px-3 py-4 h-100">' +
-      '<div class="bg-blue tag py-1 px-3"><p class="white mb-0">Más buscados</p></div>' +
-      '<img src="' + img + '" class="img-fluid px-5">' +
-      '<div class="row align-items-center mt-2">' +
-      '<div class="col-12 text-center text-md-start">' +
-      '<p class="blue mb-1 fw-700 text-uppercase mt-2 product-title">' + displayName + '</p>' +
-      '<p class="blue mb-0 font13">' + displaySubname + '</p>' +
+      '<div class="card border-0 position-relative px-3 py-4 h-100 d-flex flex-column">' +
+      '<div class="text-center" style="height: 160px; display: flex; align-items: center; justify-content: center;">' +
+      '<img src="' + img + '" class="img-fluid multiply" style="max-height: 100%; object-fit: contain;">' +
       '</div>' +
-      '<div class="col-12 mt-3 d-flex justify-content-center justify-content-md-start gap-2">' +
-      '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4">Ver detalles</a>' +
-      '<button type="button" class="btn btn-primary font13 blue border-blue rounded-5 px-4 add-to-budget" data-id="' + (p.eid || "") + '" data-name="' + name + '" data-subname="' + subn + '" data-img="' + img + '">Agregar</button>' +
+      '<div class="flex-grow-1 mt-2">' +
+      '<div style="height: 52px; display: flex; align-items: center; justify-content: center;" class="justify-content-md-start">' +
+      '<p class="blue mb-0 fw-700 product-title text-center text-md-start">' + displayName + '</p>' +
+      '</div>' +
+      '<p class="blue mb-0 font13 text-center text-md-start">' + displaySubname + '</p>' +
+      '</div>' +
+      '<div class="mt-3 d-flex justify-content-center justify-content-md-start gap-2">' +
+      '<a href="' + href + '" class="btn btn-outline-dark font13 blue border-blue rounded-5 px-4 py-1">Ver detalles</a>' +
+      '<button type="button" class="btn btn-primary font11 text-white border-blue rounded-5 px-3 py-1 add-to-budget" style="white-space: nowrap;" data-id="' + (p.eid || "") + '" data-name="' + name + '" data-subname="' + subn + '" data-img="' + img + '">Agregar al presupuesto</button>' +
       '</div>' +
       '</div>' +
-      '</div>' +
-      '</div>'
+      '</div>';
   }
 
   function renderGrid(list) {
@@ -121,11 +124,69 @@ document.addEventListener("DOMContentLoaded", function () {
   function buildSubcatPills() {
     if (!pillsUl) return;
     var html = ''; var base = 'nav-link rounded-pill px-4 py-2';
-    html += '<li class="nav-item" role="presentation"><button class="' + base + (currentSubcat === '' ? ' active' : '') + '" type="button" data-subcat="" aria-selected="' + (currentSubcat === '' ? 'true' : 'false') + '">Todos los productos</button></li>';
-    allSubcats.forEach(function (s) {
-      var act = (s === currentSubcat);
-      html += '<li class="nav-item" role="presentation"><button class="' + base + (act ? ' active' : '') + '" type="button" data-subcat="' + s.replace(/"/g, "&quot;") + '" aria-selected="' + (act ? 'true' : 'false') + '">' + s + '</button></li>'
-    });
+
+    // Check if search matches a category or subcategory
+    var matchedCatKey = "";
+    var matchedSubcatName = "";
+
+    if (currentSearch) {
+      var nSearch = norm(currentSearch);
+      if (REV[nSearch]) {
+        matchedCatKey = REV[nSearch];
+      } else {
+        if (MAP[nSearch]) matchedCatKey = nSearch;
+
+        // If not a category, check subcategories
+        if (!matchedCatKey) {
+          Object.keys(SUBS_BY_CAT).forEach(function (k) {
+            if (matchedCatKey) return;
+            var subs = SUBS_BY_CAT[k] || [];
+            subs.forEach(function (s) {
+              if (norm(s) === nSearch) {
+                matchedCatKey = k;
+                matchedSubcatName = s;
+              }
+            });
+          });
+        }
+      }
+    }
+
+    if (matchedCatKey) {
+      var catName = MAP[matchedCatKey];
+      // Breadcrumb Start
+      html += '<li class="nav-item d-flex align-items-center" role="presentation"><button class="' + base + '" type="button" onclick="window.location.href=\'productos.php\'">Todos los productos</button></li>';
+
+      // Category Part
+      html += '<li class="nav-item d-flex align-items-center px-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#8D8D8D" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></li>';
+
+      if (matchedSubcatName) {
+        // Category is a link
+        html += '<li class="nav-item" role="presentation"><button class="' + base + '" type="button" onclick="window.location.href=\'productos.php?cat=' + matchedCatKey + '\'">' + highlightText(catName, currentSearch) + '</button></li>';
+
+        // Subcategory Part
+        html += '<li class="nav-item d-flex align-items-center px-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#8D8D8D" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></li>';
+        html += '<li class="nav-item" role="presentation"><button class="' + base + ' active" type="button" style="cursor:default">' + highlightText(matchedSubcatName, currentSearch) + '</button></li>';
+      } else {
+        // Just Category
+        html += '<li class="nav-item" role="presentation"><button class="' + base + ' active" type="button" style="cursor:default">' + highlightText(catName, currentSearch) + '</button></li>';
+      }
+
+      // Only show subcats if it's a category match, not subcategory match
+      if (!matchedSubcatName) {
+        var catSubcats = (SUBS_BY_CAT[matchedCatKey] || []).slice(0);
+        if (catSubcats.length > 0) {
+          // Optionally render them?
+        }
+      }
+
+    } else {
+      html += '<li class="nav-item" role="presentation"><button class="' + base + (currentSubcat === '' ? ' active' : '') + '" type="button" data-subcat="" aria-selected="' + (currentSubcat === '' ? 'true' : 'false') + '">Todos los productos</button></li>';
+      allSubcats.forEach(function (s) {
+        var act = (s === currentSubcat);
+        html += '<li class="nav-item" role="presentation"><button class="' + base + (act ? ' active' : '') + '" type="button" data-subcat="' + s.replace(/"/g, "&quot;") + '" aria-selected="' + (act ? 'true' : 'false') + '">' + s + '</button></li>'
+      });
+    }
     pillsUl.innerHTML = html
   }
 
@@ -177,33 +238,39 @@ document.addEventListener("DOMContentLoaded", function () {
     })
   }
 
-  document.querySelectorAll(".slideProdInterna .swiper-slide").forEach(function (slide) {
-    slide.addEventListener("click", function () {
-      var h2 = slide.querySelector("h2"); var text = h2 ? h2.textContent : "";
+  if (swEl) {
+    swEl.addEventListener("click", function (ev) {
+      var slide = ev.target.closest(".swiper-slide");
+      if (!slide) return;
+
+      var h2 = slide.querySelector("h2");
+      var text = h2 ? h2.textContent : "";
       currentSearch = "";
       currentCategory = keyFromSliderText(text);
       currentSubcat = "";
       allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
       currentPage = 1;
+
       // Update browser URL without reload to clear search
       var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?cat=' + currentCategory;
       window.history.pushState({ path: newUrl }, '', newUrl);
 
       render();
-      scrollToResults();
 
       // Mover el slide clickeado a la primera posición
       var idx = slide.getAttribute("data-swiper-slide-index");
       if (swiperInstance && idx !== null) {
         swiperInstance.slideToLoop(parseInt(idx));
       }
-    })
-  });
+
+      scrollToResults();
+    });
+  }
 
   function scrollToResults() {
     const target = document.getElementById('titulo-categoria');
     if (target) {
-      const offset = 120; // Adjust for sticky header
+      const offset = 120; // Original framing offset
       const elementPosition = target.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -237,7 +304,12 @@ document.addEventListener("DOMContentLoaded", function () {
       MAP = resp.categories || {};
       SUBS_BY_CAT = resp.subcats_by_category || {};
       rebuildReverse();
-      allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
+      rebuildReverse();
+      if (currentSearch) {
+        allSubcats = [];
+      } else {
+        allSubcats = (SUBS_BY_CAT[currentCategory] || []).slice(0);
+      }
       render();
       selectInitialSlide();
 

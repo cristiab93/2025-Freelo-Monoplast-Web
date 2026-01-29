@@ -160,6 +160,7 @@ function updateSidebar(cart) {
 
     let html = '';
     const items = cart ? Object.values(cart) : [];
+    const totalQty = items.reduce((acc, item) => acc + parseInt(item.qty || 0), 0);
 
     if (items.length === 0) {
         html = '<p class="text-center py-5 blue">Todavía no tienes productos en tu presupuesto.</p>';
@@ -171,7 +172,7 @@ function updateSidebar(cart) {
                 <div class="ms-3 flex-grow-1">
                     <p class="blue fw-700 mb-0 font14">${item.name}</p>
                     <p class="blue font12 mb-0">${item.subname}</p>
-                    <a href="javascript:void(0)" class="remove-item font10 text-danger" data-id="${item.id}">Eliminar</a>
+                    <a href="javascript:void(0)" class="remove-item font14 fw-700 text-danger" data-id="${item.id}">Eliminar</a>
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-between qty-container ms-3">
                     <button class="qty-btn qty-btn-plus" type="button" data-id="${item.id}">+</button>
@@ -185,7 +186,7 @@ function updateSidebar(cart) {
         <div class="border-top mt-4 pt-4">
             <div class="d-flex align-items-center justify-content-between">
                 <p class="mb-0 fw-700 font14 blue">Productos en lista</p>
-                <h5 class="mb-0 blue fw-300">${items.length}</h5>
+                <h5 class="mb-0 blue fw-300">${totalQty}</h5>
             </div>
         </div>
         <div class="text-center mt-4">

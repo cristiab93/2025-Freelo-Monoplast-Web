@@ -11,10 +11,10 @@ if($_SERVER['HTTP_HOST'] == 'localhost:82' || $_SERVER['HTTP_HOST'] == 'localhos
 }
 else
 {
-    define("DBSERVERNAME", "localhost");
-	define("DBUSERNAME", "c2110196_sk");
-	define("DBPASSWORD", "poGEve59wi");
-	define("DBNAME", "c2110196_sk");
+    define("DBSERVERNAME", "sql308.infinityfree.com");
+	define("DBUSERNAME", "if0_41017142");
+	define("DBPASSWORD", "0112358Cris");
+	define("DBNAME", "if0_41017142_testing");
 	define("DEPURAR", 0);
-	define("BASEURL", "https://somoskahlo.com");
+	define("BASEURL", "https://testing2026.infinityfree.me/");
 }

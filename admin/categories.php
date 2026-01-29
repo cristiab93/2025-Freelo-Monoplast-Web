@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 /* ------------ fetch ------------ */
-$rows = SelectQuery('categories')->Order('category_name','ASC')->Limit(1000000)->Run();
+$rows = SelectQuery('categories')->Order('category_name','ASC')->Limit(1000000)->SetIndex(-1)->Run();
 $categories = is_array($rows) ? array_values($rows) : [];
 ?>
 <!DOCTYPE html>

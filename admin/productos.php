@@ -18,14 +18,34 @@ function handle_image_upload($field,&$error){
     $tmp = $_FILES[$field]['tmp_name'];
     $orig = $_FILES[$field]['name'];
     $ext  = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-    $allowed = ['png','jpg','jpeg','svg','webp'];
+    $allowed = ['png','jpg','jpeg'];
     if (!in_array($ext,$allowed)) { $error = 'bad_img_type'; return null; }
 
-    $fi = finfo_open(FILEINFO_MIME_TYPE);
-    $mime = finfo_file($fi,$tmp);
-    finfo_close($fi);
-    $ok_mimes = ['image/png','image/jpeg','image/svg+xml','image/webp'];
-    if (!in_array($mime,$ok_mimes) && $ext !== 'svg') { $error = 'bad_img_type'; return null; }
+    // Check mime type (Security)
+    $mime = '';
+    if (function_exists('finfo_open')) {
+        $fi = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($fi,$tmp);
+        finfo_close($fi);
+    } elseif (function_exists('mime_content_type')) {
+        $mime = mime_content_type($tmp);
+    } else {
+        // Fallback if no mime checking functions are available
+        // We trust the extension in this worst-case scenario or could use getimagesize for images
+        $check = @getimagesize($tmp);
+        if ($check) {
+            $mime = $check['mime'];
+        }
+    }
+
+    $ok_mimes = ['image/png','image/jpeg'];
+    
+    // If we managed to get a mime type, check it. 
+    // If not (e.g. svg without getimagesize support and no fileinfo), we might skip mime check or be strict.
+    // Here we skip mime check if we couldn't detect it but still validate extension.
+    if ($mime && !in_array($mime,$ok_mimes)) { 
+        $error = 'bad_img_type'; return null; 
+    }
 
     $dir = realpath(__DIR__ . '/../uploaded_img');
     if ($dir === false) { $dir = __DIR__ . '/../uploaded_img'; ensure_dir($dir); }
@@ -39,10 +59,10 @@ function handle_image_upload($field,&$error){
 
 /* ===== Carga de categorías y subcategorías ===== */
 /* ===== Carga de categorías y subcategorías (Desde DB con keywords) ===== */
-$cat_rows = SelectQuery('categories')->Order('category_name','ASC')->Run();
+$cat_rows = SelectQuery('categories')->Order('category_name','ASC')->SetIndex(-1)->Run();
 $cat_rows = is_array($cat_rows) ? array_values($cat_rows) : [];
 
-$sub_rows = SelectQuery('sub_categories')->Order('sub_category_name','ASC')->Run();
+$sub_rows = SelectQuery('sub_categories')->Order('sub_category_name','ASC')->SetIndex(-1)->Run();
 $sub_rows = is_array($sub_rows) ? array_values($sub_rows) : [];
 
 $CATS = [];
@@ -70,17 +90,21 @@ foreach ($sub_rows as $r) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
-    // Common fields
+    if ($action === 'delete') {
+        // Delete action: only needs product_id
+        $id = (int)($_POST['product_id'] ?? 0);
+        if ($id > 0) { DeleteQuery('products')->Condition('product_id =','i',$id)->Run(); }
+        header('Location: productos.php?m=deleted'); exit;
+    }
+
+    // For create/update: extract and validate common fields
     $name        = trim($_POST['product_name'] ?? '');
     $subname     = trim($_POST['product_subname'] ?? '');
-    // Category inputs now send KEYWORDS
     $category_key = trim($_POST['product_category'] ?? ''); 
     $subcat_key   = trim($_POST['product_subcategory'] ?? '');
     $description = trim($_POST['product_description'] ?? '');
     
-    // Validate
-    // Strict validation: Name, Subname, Category, SUBCATEGORY, Description MUST be present
-    // We treat '0' as invalid now too because it means "Sin subcategoría" which user doesn't want allowed.
+    // Validate required fields for create/update
     if ($subcat_key === '0' || $subcat_key === '') {
         header('Location: productos.php?m=invalid'); exit;
     }
@@ -146,16 +170,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         header('Location: productos.php?m=updated'); exit;
     }
-
-    if ($action === 'delete') {
-        $id = (int)($_POST['product_id'] ?? 0);
-        if ($id > 0) { DeleteQuery('products')->Condition('product_id =','i',$id)->Run(); }
-        header('Location: productos.php?m=deleted'); exit;
-    }
 }
 
 /* ===== Listado de productos ===== */
-$rows = SelectQuery('products')->Order('product_date','DESC')->Limit(1000000)->Run();
+$rows = SelectQuery('products')->Order('product_date','DESC')->Limit(1000000)->SetIndex(-1)->Run();
 $products = is_array($rows) ? array_values($rows) : [];
 
 /* helpers de presentación */
@@ -270,6 +288,55 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
             border-style: solid;
         }
     </style>
+    <style>
+        /* Filter Pills Styles */
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        .filter-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .filter-pill {
+            background-color: #f0f2f5;
+            border: 1px solid #dcdcdc;
+            color: #444;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .filter-pill:hover {
+            background-color: #e2e6ea;
+            border-color: #adb5bd;
+        }
+        .filter-pill.active {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+        }
+        .sub-filters {
+            display: none; /* Hidden by default until a category is selected */
+            margin-left: 20px;
+            padding-left: 14px;
+            border-left: 2px solid #e9ecef;
+        }
+        .sub-filters.show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <?php ShowAdminNavBar('nav-products'); ?>
@@ -278,7 +345,7 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
 
 <div class="contenidoAdmin">
   <div class="inicioAdmin jumbotron">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Productos</h2>
       <button class="btn btn-danger" type="button" id="btnCreate">Nuevo producto</button>
     </div>
@@ -299,8 +366,30 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
         <?php endif; ?>
     <?php endif; ?>
 
+    <!-- Filter Section -->
+    <div class="filter-container">
+        <!-- Category Filters -->
+        <div class="filter-group">
+            <span class="filter-label">Categorías:</span>
+            <div class="filter-pills" id="categoryFilters">
+                <div class="filter-pill active" data-filter="all">Todas</div>
+                <?php foreach ($CATS as $cKey => $cName): ?>
+                    <div class="filter-pill" data-filter="<?= htmlspecialchars($cKey) ?>"><?= htmlspecialchars($cName) ?></div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- Subcategory Filters (Container) -->
+        <div class="filter-group sub-filters" id="subcategoryWrapper">
+            <span class="filter-label">Subcategorías:</span>
+            <div class="filter-pills" id="subcategoryFilters">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <div class="table-wrap mt-3">
-      <table class="table table-bordered table-hover mb-0">
+      <table class="table table-bordered table-hover mb-0" id="productsTable">
         <thead>
           <tr>
             <th style="width:60px">ID</th>
@@ -316,16 +405,16 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
         </thead>
         <tbody>
         <?php if (!count($products)): ?>
-          <tr><td colspan="8">No hay productos cargados</td></tr>
+          <tr><td colspan="9">No hay productos cargados</td></tr>
         <?php else: foreach ($products as $p):
               $pcat = $p['product_category'] ?? ''; // Keyword
               $psub = $p['product_subcategory'] ?? ''; // Keyword
         ?>
-          <tr>
+          <tr data-category-key="<?= htmlspecialchars($pcat) ?>" data-subcategory-key="<?= htmlspecialchars($psub) ?>">
             <td><?= (int)$p['product_id'] ?></td>
-            <td><?php if (!empty($p['product_img'])): ?>
-              <img class="mini-thumb" src="../uploaded_img/<?= htmlspecialchars($p['product_img']) ?>" alt="">
-            <?php endif; ?></td>
+            <td>
+              <img class="mini-thumb" src="<?= view_product_img($p['product_img'] ?? '', '../uploaded_img/') ?>" alt="">
+            </td>
             <td style="max-width:180px; word-break:break-word;"><?= htmlspecialchars($p['product_name'] ?? '') ?></td>
             <td style="max-width:220px; word-break:break-word;"><?= htmlspecialchars($p['product_subname'] ?? '') ?></td>
             <td><?= htmlspecialchars(view_cat_name($pcat, $CATS)) ?></td>
@@ -429,7 +518,7 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
           <div class="form-group">
             <label>Imagen</label>
             <input type="file" name="product_img_file" id="c_img" class="form-control"
-                   accept=".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp">
+                   accept=".jpg,.jpeg,.png,image/jpeg,image/png">
             <small class="text-muted">Se guarda en /uploaded_img</small>
           </div>
         </div>
@@ -514,7 +603,7 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
           <div class="form-group">
             <label>Imagen</label>
             <input type="file" name="product_img_file" id="e_img" class="form-control"
-                   accept=".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp">
+                   accept=".jpg,.jpeg,.png,image/jpeg,image/png">
             <small class="text-muted">Dejar vacío para mantener la actual</small>
           </div>
         </div>
@@ -550,7 +639,7 @@ window.SUBS_BY_FATHER = <?php
   echo json_encode($SUBS_BY_FATHER, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 ?>;
 
-/* Rellena un <select> de subcategorías dado el fatherKey */
+  /* Rellena un <select> de subcategorías dado el fatherKey */
 function fillSubcategorySelect(sel, fatherKey, selectedKey){
   var $s = $(sel);
   $s.empty();
@@ -571,6 +660,104 @@ function fillSubcategorySelect(sel, fatherKey, selectedKey){
 }
 
 $(function(){
+  /* =========================================
+     FILTER PILLS LOGIC
+     ========================================= */
+  
+  // Cache DOM elements
+  var $catPills = $('#categoryFilters .filter-pill');
+  var $subWrapper = $('#subcategoryWrapper');
+  var $subPillsContainer = $('#subcategoryFilters');
+  var $tableRows = $('#productsTable tbody tr');
+
+  // 1. Initial State: "All" selected
+  var activeCategory = 'all';
+  var activeSubcategory = 'all';
+
+  // 2. Click on Category Pill
+  $catPills.on('click', function(){
+      var $this = $(this);
+      
+      // UI Update
+      $catPills.removeClass('active');
+      $this.addClass('active');
+
+      // Logic
+      activeCategory = $this.data('filter');
+      activeSubcategory = 'all'; // Reset subcategory when changing category
+
+      // Update Subcategory Pills
+      renderSubcategories(activeCategory);
+
+      // Perform Filtering
+      filterTable();
+  });
+
+  // 3. Render Subcategories
+  function renderSubcategories(catKey) {
+      $subPillsContainer.empty();
+      
+      if (catKey === 'all') {
+          $subWrapper.removeClass('show');
+          return;
+      }
+
+      // Get subcategories for this category
+      var subList = (window.SUBS_BY_FATHER || {})[catKey] || [];
+      
+      if (subList.length === 0) {
+          $subWrapper.removeClass('show');
+          return;
+      }
+
+      // Show wrapper
+      $subWrapper.addClass('show');
+
+      // Add "Todas" pill for subcategories
+      var $allPill = $('<div class="filter-pill active" data-filter="all">Todas</div>');
+      $subPillsContainer.append($allPill);
+
+      // Add specific subcategory pills
+      subList.forEach(function(sub){
+          var $pill = $('<div class="filter-pill" data-filter="'+ sub.key +'">'+ sub.name +'</div>');
+          $subPillsContainer.append($pill);
+      });
+  }
+
+  // 4. Click on Subcategory Pill (Delegated)
+  $subPillsContainer.on('click', '.filter-pill', function(){
+      var $this = $(this);
+
+      // UI Update
+      $subPillsContainer.find('.filter-pill').removeClass('active');
+      $this.addClass('active');
+
+      // Logic
+      activeSubcategory = $this.data('filter');
+
+      // Perform Filtering
+      filterTable();
+  });
+
+  // 5. Main Filter Function
+  function filterTable() {
+      $tableRows.each(function(){
+          var $row = $(this);
+          var rowCat = $row.data('category-key');
+          var rowSub = $row.data('subcategory-key');
+
+          var catMatch = (activeCategory === 'all') || (rowCat == activeCategory);
+          var subMatch = (activeSubcategory === 'all') || (rowSub == activeSubcategory);
+
+          if (catMatch && subMatch) {
+              $row.show();
+          } else {
+              $row.hide();
+          }
+      });
+  }
+
+
   var isBS5 = typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function';
   var createEl = document.getElementById('createModal');
   var editEl   = document.getElementById('editModal');
@@ -617,6 +804,25 @@ $(function(){
   });
   $('.cancel-edit, #editModal .btn-close').on('click', function(){
     if (isBS5) { editModal.hide(); } else { $('#editModal').modal('hide'); }
+  });
+
+  // Client-side validation for images
+  function validateImage(input) {
+      if (input.files && input.files[0]) {
+          var file = input.files[0];
+          var ext = file.name.split('.').pop().toLowerCase();
+          var allowed = ['jpg', 'jpeg', 'png'];
+          if (allowed.indexOf(ext) === -1) {
+              alert('Solo se permiten archivos: ' + allowed.join(', '));
+              input.value = ''; // Reset input
+              return false;
+          }
+      }
+      return true;
+  }
+
+  $('#c_img, #e_img').on('change', function() {
+      validateImage(this);
   });
 });
 

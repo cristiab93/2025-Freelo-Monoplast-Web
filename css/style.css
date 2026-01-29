@@ -457,6 +457,18 @@ p {
     border-color: #FFFFFF;
 }
 
+/* Fix for budget form in modal (needs dark text) */
+#budgetForm .form-control {
+    color: #0A0338 !important;
+    background-color: #fff !important;
+}
+
+#budgetForm .form-control:focus {
+    color: #0A0338 !important;
+    background-color: #fff !important;
+    border-color: #0A0338 !important;
+}
+
 /* Specific fix for search input to prevent blue background */
 .search-box input.form-control:focus {
     background-color: rgba(255, 255, 255, 0.1) !important;
@@ -470,6 +482,16 @@ input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px transparent inset !important;
     -webkit-text-fill-color: #fff !important;
     transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Fix autofill for budget form (needs dark text) */
+#budgetForm input:-webkit-autofill,
+#budgetForm input:-webkit-autofill:hover,
+#budgetForm input:-webkit-autofill:focus,
+#budgetForm input:-webkit-autofill:active {
+    -webkit-text-fill-color: #0A0338 !important;
+    transition: background-color 5000s ease-in-out 0s;
+    /* Keep background transparent trick if valid or just let it match */
 }
 
 .highlight {
@@ -516,8 +538,6 @@ a.btn.dropdown-toggle {
 
 .buscados .card {
     border-radius: 20px;
-    background: #F5F5F5;
-    min-height: 340px;
 }
 
 .buscados .card .product-title {
@@ -531,7 +551,6 @@ a.btn.dropdown-toggle {
 
 .buscados .card img {
     mix-blend-mode: multiply;
-    height: 220px;
     object-fit: contain;
     width: 100%;
 }
@@ -548,8 +567,8 @@ a.btn.dropdown-toggle {
     z-index: 8;
 }
 
-.tab-pane .card {
-    min-height: 370px;
+.uppercase {
+    text-transform: uppercase;
 }
 
 .page-link {
@@ -768,8 +787,12 @@ a.btn.dropdown-toggle {
 }
 
 .btn-primary {
-    background-color: #0A0338;
-    color: #FFFFFF;
+    background-color: #0A0338 !important;
+    color: #FFFFFF !important;
+}
+
+.add-to-budget {
+    color: #FFFFFF !important;
 }
 
 .btn-primary:hover {
@@ -1055,4 +1078,15 @@ a.btn.dropdown-toggle {
     :root {
         --swiper-navigation-size: 30px;
     }
+}
+
+.error-border {
+    border-color: #ff0000 !important;
+}
+
+.white,
+.text-white,
+.add-to-budget,
+.btn-primary {
+    color: #ffffff !important;
 }

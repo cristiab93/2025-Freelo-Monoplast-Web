@@ -33,6 +33,20 @@ $sel = SelectQuery("products");
 $sel->Condition("product_id =", "i", $product_id);
 $rows = $sel->SetIndex(-1)->Limit(1)->Run();
 
+// Mappings from DB
+global $CATEGORY_MAP;
+$cat_map = $CATEGORY_MAP;
+
+$subcat_map = [];
+$sub_res = SelectQuery("sub_categories")->Run();
+if (is_array($sub_res)) {
+  foreach ($sub_res as $sr) {
+    if (isset($sr['sub_category_key_word']) && isset($sr['sub_category_name'])) {
+      $subcat_map[$sr['sub_category_key_word']] = $sr['sub_category_name'];
+    }
+  }
+}
+
 if (!count($rows)) {
   echo json_encode([
     "success" => 0,
@@ -49,15 +63,36 @@ $raw = isset($r["product_img"]) ? trim($r["product_img"]) : "";
 $isAbs = preg_match('/^https?:\/\//i', $raw) || (strlen($raw) && $raw[0] === "/");
 $img = $raw !== "" ? ($isAbs ? $raw : ("uploaded_img/" . ltrim($raw, "/"))) : "uploaded_img/ariston.png";
 
+$subname_raw = isset($r["product_subname"]) ? trim((string)$r["product_subname"]) : "";
+$subc_raw = $r["product_subcategory"] ?? '';
+$display_subc = isset($subcat_map[$subc_raw]) ? $subcat_map[$subc_raw] : $subc_raw;
+
+if ($subname_raw === "" && $subc_raw !== "") {
+  $subname_raw = $display_subc;
+}
+
+$cat_raw = $r["product_category"] ?? '';
+$display_cat = $cat_raw;
+$cat_key = $cat_raw; // Fallback
+foreach($cat_map as $ck => $cv) {
+  if (mb_strtolower($cat_raw) === mb_strtolower($ck) || mb_strtolower($cat_raw) === mb_strtolower($cv)) {
+    $display_cat = $cv;
+    $cat_key = $ck;
+    break;
+  }
+}
+
 $product = [
   "id" => (int)$r["product_id"],
   "eid" => sed_encryption((string)$r["product_id"]),
-  "name" => $r["product_name"],
-  "subname" => $r["product_subname"],
-  "category" => $r["product_category"],
-  "subcategory" => $r["product_subcategory"],
+  "name" => title_case(clean_text($r["product_name"])),
+  "subname" => title_case(clean_text($subname_raw)),
+  "category" => title_case(clean_text($display_cat)),
+  "category_key" => $cat_key,
+  "subcategory" => title_case(clean_text($display_subc)),
+  "subcategory_key" => $subc_raw,
   "image" => $img,
-  "description" => $r["product_description"],
+  "description" => clean_text($r["product_description"]),
   "date" => $r["product_date"]
 ];
 
@@ -77,13 +112,20 @@ if (!empty($product["category"])) {
     $raw2 = isset($rr["product_img"]) ? trim($rr["product_img"]) : "";
     $isAbs2 = preg_match('/^https?:\/\//i', $raw2) || (strlen($raw2) && $raw2[0] === "/");
     $img2 = $raw2 !== "" ? ($isAbs2 ? $raw2 : ("uploaded_img/" . ltrim($raw2, "/"))) : "uploaded_img/ariston.png";
+    $subc_raw2 = $rr["product_subcategory"] ?? '';
+    $display_subc2 = isset($subcat_map[$subc_raw2]) ? $subcat_map[$subc_raw2] : $subc_raw2;
+    $sn_raw2 = isset($rr["product_subname"]) ? trim((string)$rr["product_subname"]) : "";
+    if ($sn_raw2 === "" && $subc_raw2 !== "") {
+      $sn_raw2 = $display_subc2;
+    }
+
     $related[] = [
       "id" => (int)$rr["product_id"],
       "eid" => sed_encryption((string)$rr["product_id"]),
-      "name" => $rr["product_name"],
-      "subname" => $rr["product_subname"],
+      "name" => title_case(clean_text($rr["product_name"])),
+      "subname" => truncate_text(title_case(clean_text($sn_raw2)), 80),
       "category" => $rr["product_category"],
-      "subcategory" => $rr["product_subcategory"],
+      "subcategory" => title_case(clean_text($display_subc2)),
       "image" => $img2
     ];
     if (count($related) >= $take) break;
@@ -103,13 +145,20 @@ if (count($related) < $take && !empty($product["subcategory"])) {
     $raw2 = isset($rr["product_img"]) ? trim($rr["product_img"]) : "";
     $isAbs2 = preg_match('/^https?:\/\//i', $raw2) || (strlen($raw2) && $raw2[0] === "/");
     $img2 = $raw2 !== "" ? ($isAbs2 ? $raw2 : ("uploaded_img/" . ltrim($raw2, "/"))) : "uploaded_img/ariston.png";
+    $subc_raw2 = $rr["product_subcategory"] ?? '';
+    $display_subc2 = isset($subcat_map[$subc_raw2]) ? $subcat_map[$subc_raw2] : $subc_raw2;
+    $sn_raw2 = isset($rr["product_subname"]) ? trim((string)$rr["product_subname"]) : "";
+    if ($sn_raw2 === "" && $subc_raw2 !== "") {
+      $sn_raw2 = $display_subc2;
+    }
+
     $related[] = [
       "id" => (int)$rr["product_id"],
       "eid" => sed_encryption((string)$rr["product_id"]),
-      "name" => $rr["product_name"],
-      "subname" => $rr["product_subname"],
+      "name" => title_case(clean_text($rr["product_name"])),
+      "subname" => truncate_text(title_case(clean_text($sn_raw2)), 80),
       "category" => $rr["product_category"],
-      "subcategory" => $rr["product_subcategory"],
+      "subcategory" => title_case(clean_text($display_subc2)),
       "image" => $img2
     ];
     if (count($related) >= $take) break;
@@ -128,13 +177,20 @@ if (count($related) < $take) {
     $raw2 = isset($rr["product_img"]) ? trim($rr["product_img"]) : "";
     $isAbs2 = preg_match('/^https?:\/\//i', $raw2) || (strlen($raw2) && $raw2[0] === "/");
     $img2 = $raw2 !== "" ? ($isAbs2 ? $raw2 : ("uploaded_img/" . ltrim($raw2, "/"))) : "uploaded_img/ariston.png";
+    $subc_raw2 = $rr["product_subcategory"] ?? '';
+    $display_subc2 = isset($subcat_map[$subc_raw2]) ? $subcat_map[$subc_raw2] : $subc_raw2;
+    $sn_raw2 = isset($rr["product_subname"]) ? trim((string)$rr["product_subname"]) : "";
+    if ($sn_raw2 === "" && $subc_raw2 !== "") {
+      $sn_raw2 = $display_subc2;
+    }
+
     $related[] = [
       "id" => (int)$rr["product_id"],
       "eid" => sed_encryption((string)$rr["product_id"]),
-      "name" => $rr["product_name"],
-      "subname" => $rr["product_subname"],
+      "name" => title_case(clean_text($rr["product_name"])),
+      "subname" => truncate_text(title_case(clean_text($sn_raw2)), 80),
       "category" => $rr["product_category"],
-      "subcategory" => $rr["product_subcategory"],
+      "subcategory" => title_case(clean_text($display_subc2)),
       "image" => $img2
     ];
     if (count($related) >= $take) break;

@@ -86,32 +86,32 @@ include_once("_general.php");
 </div>
 
 <main>
- <section class="bg-contacto bg-blue-light">
+  <section class="bg-contacto bg-blue-light">
     <div class="container">
       <div class="row align-items-center justify-content-center">
       <div class="col-10 col-lg-6">
       <h2 class="kento fw-400">CONTACTATE <br>CON NOSOTROS  </h2>
-<p class="text-white font20 mt-3">Enviamos tu consulta y en breve nos <br class="d-none d-lg-block">pondremos en contacto con vos.</p>
+<p class="text-white font20 mt-3">Envianos tu consulta y en breve nos <br class="d-none d-lg-block">pondremos en contacto.</p>
       </div>
       <div class="col-10 col-lg-5 mt-4 mt-lg-0">
-      <form action="">
+      <form id="contact-form">
 
       <div class="form-floating mb-3">
-  <input type="text" class="form-control" id="floatingInput" placeholder="">
-  <label for="floatingInput">Nombre</label>
+  <input type="text" class="form-control" id="contact-nombre" placeholder="Nombre">
+  <label for="contact-nombre">Nombre</label>
 </div>
 
       <div class="form-floating mb-3">
-  <input type="email" class="form-control" id="floatingInput" placeholder="">
-  <label for="floatingInput">Email</label>
+  <input type="email" class="form-control" id="contact-email" placeholder="Email">
+  <label for="contact-email">Email</label>
 </div>
 
   <div class="form-floating">
-  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 230px"></textarea>
-  <label for="floatingTextarea2">Mensaje</label>
+  <textarea class="form-control" placeholder="Mensaje" id="contact-mensaje" style="min-height: 207px"></textarea>
+  <label for="contact-mensaje">Mensaje</label>
 </div>
 <div class="text-end mt-4">
-<button type="submit" class="btn btn-light fw-500 font14 blue-light py-2 rounded-3 px-5">Enviar</button>
+<button type="submit" id="contact-submit" class="btn btn-light fw-500 font14 blue-light py-2 rounded-3 px-5">Enviar</button>
 </div>
       </form>
 
@@ -125,7 +125,7 @@ include_once("_general.php");
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
   <?php include_once("templates/footer.php"); ?>
-
+  <script src="js/contacto.js"></script>
   <script>
   window.addEventListener('scroll', function () {
   const header = document.getElementById('main-header');

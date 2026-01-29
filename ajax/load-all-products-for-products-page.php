@@ -39,6 +39,17 @@ $rows = array_slice($rowsAll, $offset, $perPage);
 $products = [];
 $subcategories = [];
 
+// Subcategory mapping from DB
+$subcat_map = [];
+$sub_res = SelectQuery("sub_categories")->Run();
+if (is_array($sub_res)) {
+  foreach ($sub_res as $sr) {
+    if (isset($sr['sub_category_key_word']) && isset($sr['sub_category_name'])) {
+      $subcat_map[$sr['sub_category_key_word']] = $sr['sub_category_name'];
+    }
+  }
+}
+
 foreach ($rows as $r) {
   $raw = isset($r["product_img"]) ? trim($r["product_img"]) : "";
   $isAbs = preg_match('/^https?:\/\//i', $raw) || (strlen($raw) && $raw[0] === "/");
@@ -48,14 +59,22 @@ foreach ($rows as $r) {
   $cat_key  = array_search($cat_text, $CATEGORY_MAP, true);
   if ($cat_key === false) $cat_key = '';
 
+  $subc_raw = $r["product_subcategory"] ?? '';
+  $display_subc = isset($subcat_map[$subc_raw]) ? $subcat_map[$subc_raw] : $subc_raw;
+
+  $subname = isset($r["product_subname"]) ? trim((string)$r["product_subname"]) : "";
+  if ($subname === "" && $subc_raw !== "") {
+    $subname = $display_subc;
+  }
+
   $products[] = [
     "id"            => (int)$r["product_id"],
     "eid"           => sed_encryption((string)$r["product_id"]),
-    "name"          => $r["product_name"] ?? '',
-    "subname"       => $r["product_subname"] ?? '',
+    "name"          => title_case(clean_text($r["product_name"] ?? '')),
+    "subname"       => truncate_text(title_case(clean_text($subname)), 80),
     "category"      => $cat_key,
     "category_text" => $cat_text,
-    "subcategory"   => $r["product_subcategory"] ?? '',
+    "subcategory"   => title_case(clean_text($display_subc)),
     "image"         => $img,
     "date"          => $r["product_date"] ?? null
   ];
@@ -63,12 +82,19 @@ foreach ($rows as $r) {
 
 $seen = [];
 foreach ($rowsAll as $r) {
-  $s = $r["product_subcategory"] ?? '';
-  if ($s !== '' && !isset($seen[$s])) {
-    $seen[$s] = true;
-    $subcategories[] = $s;
+  $s_raw = $r["product_subcategory"] ?? '';
+  if ($s_raw !== '') {
+    $display_s = isset($subcat_map[$s_raw]) ? $subcat_map[$s_raw] : $s_raw;
+    $s = title_case(clean_text($display_s));
+    if (!isset($seen[$s])) {
+      $seen[$s] = true;
+      $subcategories[] = $s;
+    }
   }
 }
+
+// Sort subcategories alphabetically
+sort($subcategories, SORT_STRING | SORT_FLAG_CASE);
 
 echo json_encode([
   "success"        => 1,

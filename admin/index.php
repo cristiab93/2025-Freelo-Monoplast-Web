@@ -3,7 +3,7 @@ $PAGE = 'admin-index';
 include('../_general.php');
 
 // --- Datos base ---
-$rows = SelectQuery('products')->Order('product_date','DESC')->Limit(1000000)->Run();
+$rows = SelectQuery('products')->Order('product_date','DESC')->Limit(1000000)->SetIndex(-1)->Run();
 $rows = is_array($rows) ? array_values($rows) : [];
 
 $total_products = count($rows);
@@ -16,11 +16,11 @@ foreach ($rows as $r) {
     if ($c !== '') $cat[$c] = true;
 }
 // Conteo real de categorías desde la tabla categories
-$cat_rows = SelectQuery('categories')->Run();
+$cat_rows = SelectQuery('categories')->SetIndex(-1)->Run();
 $total_categories = is_array($cat_rows) ? count($cat_rows) : 0;
 
 // subcategorías totales
-$sub_rows = SelectQuery('sub_categories')->Run();
+$sub_rows = SelectQuery('sub_categories')->SetIndex(-1)->Run();
 $total_subcategories = is_array($sub_rows) ? count($sub_rows) : 0;
 ?>
 <!DOCTYPE html>
