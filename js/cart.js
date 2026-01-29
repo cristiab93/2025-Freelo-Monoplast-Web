@@ -185,12 +185,12 @@ function updateSidebar(cart) {
         html += `
         <div class="border-top mt-4 pt-4">
             <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-0 fw-700 font14 blue">Productos en lista</p>
+                <p class="mb-0 fw-500 blue">Productos en lista</p>
                 <h5 class="mb-0 blue fw-300">${totalQty}</h5>
             </div>
         </div>
         <div class="text-center mt-4">
-            <button class="btn btn-primary font14 blue border-blue rounded-5 px-4 mt-3" data-bs-toggle="modal" data-bs-target="#budgetModal">Enviar presupuesto</button>
+            <button class="btn btn-primary font14 blue border-blue rounded-5 py-2 px-4 mt-3" data-bs-toggle="modal" data-bs-target="#budgetModal">Enviar presupuesto</button>
         </div>`;
     }
 
