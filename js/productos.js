@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var grid = document.getElementById("grid-productos");
   var pillsUl = document.getElementById("pills-tab");
   var titleEl = document.getElementById("titulo-categoria");
+  var descEl = document.getElementById("descripcion-categoria");
+  var swiperSection = document.querySelector(".buscados");
   var pagNav = document.getElementById("nav-paginacion");
   var pagUl = document.getElementById("pagination");
 
@@ -59,9 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!titleEl) return;
     if (currentSearch) {
       titleEl.textContent = 'Búsqueda: ' + currentSearch;
+      if (descEl) descEl.style.display = 'none';
+      if (swiperSection) swiperSection.style.display = 'none';
     } else {
       var d = (MAP && MAP[currentCategory]) ? MAP[currentCategory] : "Productos";
-      titleEl.textContent = d
+      titleEl.textContent = d;
+      if (descEl) descEl.style.display = 'block';
+      if (swiperSection) swiperSection.style.display = 'block';
     }
   }
 

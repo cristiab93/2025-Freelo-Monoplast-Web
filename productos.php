@@ -131,7 +131,7 @@ include "_general.php";
       <div class="row">
         <div class="col-10 offset-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3 text-center">
           <h2 class="text-black" id="titulo-categoria">Calefacción</h2>
-          <p class="fw-400 mt-3">
+          <p id="descripcion-categoria" class="fw-400 mt-3">
             Soluciones eficientes para que tu hogar y tus proyectos estén siempre a la temperatura ideal.
             Calidad y respaldo en cada producto.
           </p>
