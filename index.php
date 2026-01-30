@@ -104,16 +104,19 @@ include_once ("_general.php");
         <div class="swiper-slide bg-slide-1">
           <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
             <h1 class="mb-0 kento">Llegó la <br>temporada de pileta</h1>
+            <a href="productos.php?cat=piletas" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4">Ver productos</a>
           </div>
         </div>
         <div class="swiper-slide bg-slide-2">
           <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
             <h1 class="mb-0 kento">Más de 40 años <br>acompañando tus obras</h1>
+            <a href="nosotros.php" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4">Conoce más</a>
           </div>
         </div>
         <div class="swiper-slide bg-slide-3">
           <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
             <h1 class="mb-0 kento">Conseguí <br>tu mampara</h1>
+            <a href="productos.php?cat=artefactos" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4">Ver productos</a>
           </div>
         </div>
       </div>
