@@ -60,7 +60,7 @@ include_once("_general.php");
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
           <li class="nav-item"><a class="nav-link" href="productos.php">Productos</a></li>
           <li class="nav-item"><a class="nav-link" href="nosotros.php">Nosotros</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://www.mercadolibre.com.ar/pagina/sanitariosmunro" target="_blank">MERCADO LIBRE</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://www.mercadolibre.com.ar/pagina/sanitariosmunro" target="_blank">Mercado Libre</a></li>
           <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
         </ul>
 
@@ -96,7 +96,7 @@ include_once("_general.php");
     <div class="container vh-100">
       <div class="row align-items-center justify-content-center vh-100">
         <div class="col-10 text-center">
-          <img src="img/logo.svg" class="logo-nosotros">
+         <!-- <img src="img/logo.svg" class="logo-nosotros"> -->
         </div>
       </div>
     </div>

@@ -51,7 +51,7 @@ body {
 
 .bg-about {
     background-size: cover;
-    background-position: center center;
+    background-position: center top;
     background-repeat: no-repeat;
     height: 100vh;
     background-image: url(../img/bg-nosotros.jpg);
