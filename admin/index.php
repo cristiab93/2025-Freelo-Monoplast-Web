@@ -22,6 +22,10 @@ $total_categories = is_array($cat_rows) ? count($cat_rows) : 0;
 // subcategorías totales
 $sub_rows = SelectQuery('sub_categories')->SetIndex(-1)->Run();
 $total_subcategories = is_array($sub_rows) ? count($sub_rows) : 0;
+
+// más buscados
+$most_searched_rows = SelectQuery('products')->Condition('product_most_search =', 'i', 1)->SetIndex(-1)->Run();
+$total_most_searched = is_array($most_searched_rows) ? count($most_searched_rows) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -87,6 +91,14 @@ $total_subcategories = is_array($sub_rows) ? count($sub_rows) : 0;
                     <div class="metric-number"><?= (int)$total_subcategories ?></div>
                     <div class="metric-label">Subcategorías</div>
                 </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <a href="most_searched.php" style="text-decoration: none; color: inherit;">
+                    <div class="metric-card" style="border-color: #ffc107;">
+                        <div class="metric-number" style="color: #ffc107;"><?= (int)$total_most_searched ?></div>
+                        <div class="metric-label">En "Más buscados" <i class="fas fa-arrow-right ms-2"></i></div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>

@@ -69,7 +69,7 @@ $(function () {
       });
   }
 
-  cargarProductos({ limit: 6, order: "recent" });
+  cargarProductos({ limit: 4, most_searched: 1 });
 });
 
 window.addEventListener('scroll', function () {

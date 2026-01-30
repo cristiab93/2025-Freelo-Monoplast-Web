@@ -7,6 +7,7 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $category = isset($_GET['category']) ? trim($_GET['category']) : '';
 $subcategory = isset($_GET['subcategory']) ? trim($_GET['subcategory']) : '';
 $order = isset($_GET['order']) ? trim($_GET['order']) : 'recent';
+$most_searched = isset($_GET['most_searched']) ? (int)$_GET['most_searched'] : 0;
 
 if ($limit < 1) $limit = 12;
 if ($limit > 60) $limit = 60;
@@ -23,19 +24,25 @@ if ($category !== '') {
 if ($subcategory !== '') {
   $sel->Condition("product_subcategory =", 's', $subcategory);
 }
+if ($most_searched === 1) {
+  $sel->Condition("product_most_search =", 'i', 1);
+  $order_str = "product_most_search_order ASC, product_name";
+} else {
+  $order_str = 'product_date';
+}
 
 switch ($order) {
   case 'az':
-    $sel->Order('product_name', 'ASC');
+    $sel->Order($most_searched === 1 ? "product_most_search_order ASC, product_name" : "product_name", 'ASC');
     break;
   case 'za':
-    $sel->Order('product_name', 'DESC');
+    $sel->Order($most_searched === 1 ? "product_most_search_order ASC, product_name" : "product_name", 'DESC');
     break;
   case 'oldest':
-    $sel->Order('product_date', 'ASC');
+    $sel->Order($most_searched === 1 ? "product_most_search_order ASC, product_date" : "product_date", 'ASC');
     break;
   default:
-    $sel->Order('product_date', 'DESC');
+    $sel->Order($most_searched === 1 ? "product_most_search_order ASC, product_date" : "product_date", 'DESC');
 }
 
 $rows = $sel->Limit($limit)->Run();

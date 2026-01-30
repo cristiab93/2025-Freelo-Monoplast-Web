@@ -51,6 +51,13 @@ function ShowAdminNavBar($selected)
             <span class="nav-text">Subcategorías</span>
           </a>
         </li>
+
+        <li>
+          <a id="nav-most-searched" href="most_searched.php">
+            <i class="fa fa-star fa-2x"></i>
+            <span class="nav-text">Más buscados</span>
+          </a>
+        </li>
       </ul>
 
       <ul class="logout">

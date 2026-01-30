@@ -8,10 +8,23 @@ $(function () {
     return '<li>' + str + '</li>';
   }
 
+  function cleanText(text) {
+    if (!text) return '';
+    return text.replace(/&nbsp;/g, ' ').replace(/&amp;nbsp;/g, ' ').replace(/\u00A0/g, ' ');
+  }
+
   function renderBullets(text) {
     if (!text) return '';
-    var parts = text.split(/\r?\n/).map(function (t) { return t.trim(); }).filter(function (t) { return t.length; });
-    if (!parts.length) parts = [text];
+    var cleaned = cleanText(text);
+
+    // Split by newlines or " - " (dash with spaces)
+    var parts = cleaned.split(/\r?\n| - /).map(function (t) {
+      return t.trim().replace(/^-+/, '').trim();
+    }).filter(function (t) {
+      return t.length > 0;
+    });
+
+    if (!parts.length) return li(cleaned);
     return parts.map(li).join('');
   }
 
@@ -63,7 +76,7 @@ $(function () {
       $('#prod-breadcrumbs').html(breadHtml);
       $('#zoom-img').attr('src', p.image || 'uploaded_img/ariston.png');
       $('#prod-title').text(p.name || '');
-      $('#prod-subtitle').text(p.subname || '');
+      $('#prod-subtitle').text(cleanText(p.subname || ''));
       $('#prod-features').html(renderBullets(p.description || ''));
       if (resp.related && resp.related.length) {
         $('#relacionados').html(resp.related.map(renderRelacionado).join(''));

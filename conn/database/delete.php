@@ -53,6 +53,7 @@ class DeleteQuery extends ConditionalQuery {
             if(mysqli_stmt_execute($stmt))
             { 
                 //success
+                return true;
             } 
             else
             {
