@@ -76,6 +76,13 @@ a.nav-link {
     color: #FFFFFF;
 }
 
+#prod-features
+
+ {
+    font-size: 15px;
+    line-height: 24px;
+}
+
 
 .offcanvas {
     background-color: #F5F5F5;
