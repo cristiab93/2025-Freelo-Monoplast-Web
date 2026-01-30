@@ -80,7 +80,7 @@ foreach ($rows as $r) {
     'category' => $r['product_category'],
     'subcategory' => title_case(clean_text($display_subc)),
     'image' => $img,
-    'description' => html_entity_decode($r['product_description'], ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+    'description' => clean_text($r['product_description']),
     'date' => $r['product_date']
   ];
 }

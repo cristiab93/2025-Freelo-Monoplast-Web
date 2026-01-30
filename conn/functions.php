@@ -315,7 +315,14 @@ function clean_text($text) {
   $text = strip_tags($text);
   
   // Final trim
-  return trim($text);
+  $text = trim($text);
+
+  // If the text has only 1 character, treat it as empty
+  if (mb_strlen($text, 'UTF-8') <= 1) {
+    return '';
+  }
+
+  return $text;
 }
 
 /**

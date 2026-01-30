@@ -415,8 +415,8 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
             <td>
               <img class="mini-thumb" src="<?= view_product_img($p['product_img'] ?? '', '../uploaded_img/') ?>" alt="">
             </td>
-            <td style="max-width:180px; word-break:break-word;"><?= htmlspecialchars($p['product_name'] ?? '') ?></td>
-            <td style="max-width:220px; word-break:break-word;"><?= htmlspecialchars($p['product_subname'] ?? '') ?></td>
+            <td style="max-width:180px; word-break:break-word;"><?= htmlspecialchars(clean_text($p['product_name'] ?? '')) ?></td>
+            <td style="max-width:220px; word-break:break-word;"><?= htmlspecialchars(clean_text($p['product_subname'] ?? '')) ?></td>
             <td><?= htmlspecialchars(view_cat_name($pcat, $CATS)) ?></td>
             <td><?= htmlspecialchars(view_sub_name($psub, $SUBS_BY_FATHER)) ?></td>
             <td>
@@ -435,9 +435,9 @@ function view_sub_name($subKey, $SUBS_BY_FATHER){
               <button
                   class="btn btn-sm btn-secondary btn-edit"
                   data-id="<?= (int)$p['product_id'] ?>"
-                  data-name="<?= htmlspecialchars($p['product_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                  data-subname="<?= htmlspecialchars($p['product_subname'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                  data-description="<?= htmlspecialchars($p['product_description'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                  data-name="<?= htmlspecialchars(clean_text($p['product_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                  data-subname="<?= htmlspecialchars(clean_text($p['product_subname'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                  data-description="<?= htmlspecialchars(clean_text($p['product_description'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                   data-size="<?= htmlspecialchars($p['product_size'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                   data-category-key="<?= htmlspecialchars($pcat, ENT_QUOTES, 'UTF-8') ?>"
                   data-subcategory-key="<?= htmlspecialchars($psub, ENT_QUOTES, 'UTF-8') ?>"
