@@ -76,9 +76,7 @@ a.nav-link {
     color: #FFFFFF;
 }
 
-#prod-features
-
- {
+#prod-features {
     font-size: 15px;
     line-height: 24px;
 }
@@ -476,7 +474,7 @@ p {
 
 .bg-contacto {
     background-image: url(../img/bg-contacto.png);
-    background-position: top;
+    background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     padding: 210px 0 130px;

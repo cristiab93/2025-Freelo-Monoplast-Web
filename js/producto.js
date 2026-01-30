@@ -20,12 +20,14 @@ $(function () {
     // Split by newlines or " - " (dash with spaces)
     var parts = cleaned.split(/\r?\n| - /).map(function (t) {
       return t.trim().replace(/^-+/, '').trim();
-    }).filter(function (t) {
-      return t.length > 0;
     });
 
     if (!parts.length) return li(cleaned);
-    return parts.map(li).join('');
+
+    return parts.map(function (t) {
+      if (t === '') return '<li style="min-height: 1.2em; list-style: none;">&nbsp;</li>';
+      return li(t);
+    }).join('');
   }
 
   function renderRelacionado(p) {

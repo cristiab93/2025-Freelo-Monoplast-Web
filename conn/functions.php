@@ -304,6 +304,9 @@ function title_case($text) {
 function clean_text($text) {
   if (empty($text)) return $text;
   
+  // Replace <br> with newlines to preserve them before stripping tags
+  $text = preg_replace('/<br\s*\/?>/i', "\n", $text);
+
   // Decode entities (handling double encoding if necessary)
   $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
   $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');

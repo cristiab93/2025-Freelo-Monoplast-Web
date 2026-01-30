@@ -99,22 +99,26 @@ include_once("_general.php");
       <div class="col-10 col-lg-6">
       <h2 class="kento fw-400">CONTACTATE <br>CON NOSOTROS  </h2>
 <p class="text-white font20 mt-3">Envianos tu consulta y en breve nos <br class="d-none d-lg-block">pondremos en contacto.</p>
+        <div class="mt-4 text-white">
+          <p class="mb-1"><strong class="uppercase font14">Local:</strong> Av. Mitre 2415, Munro</p>
+          <p class="mb-0"><strong class="uppercase font14">Teléfono:</strong> 011 4756-2345</p>
+        </div>
       </div>
       <div class="col-10 col-lg-5 mt-4 mt-lg-0">
       <form id="contact-form">
 
       <div class="form-floating mb-3">
-  <input type="text" class="form-control" id="contact-nombre" placeholder="Nombre">
+  <input type="text" class="form-control" id="contact-nombre" placeholder="Nombre" required>
   <label for="contact-nombre">Nombre</label>
 </div>
 
       <div class="form-floating mb-3">
-  <input type="email" class="form-control" id="contact-email" placeholder="Email">
+  <input type="email" class="form-control" id="contact-email" placeholder="Email" required>
   <label for="contact-email">Email</label>
 </div>
 
   <div class="form-floating">
-  <textarea class="form-control" placeholder="Mensaje" id="contact-mensaje" style="min-height: 207px"></textarea>
+  <textarea class="form-control" placeholder="Mensaje" id="contact-mensaje" style="min-height: 120px" required></textarea>
   <label for="contact-mensaje">Mensaje</label>
 </div>
 <div class="text-end mt-4">
