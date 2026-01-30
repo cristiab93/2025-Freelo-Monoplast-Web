@@ -135,7 +135,7 @@ include_once("_general.php");
         </div>
         <div class="col-10 offset-1 offset-md-0 col-md-5 col-lg-6 offset-lg-1">
           <h1 id="prod-title" class="blue mb-3 font38 mt-4 mt-md-0 fw-500"></h1>
-          <p id="prod-subtitle" class="blue mb-md-5 mb-4 font15 fw-400"></p>
+          <p id="prod-subtitle" class="blue mb-4 font15 fw-400"></p>
           <ul id="prod-features" class="blue fw-400 ps-0 list-unstyled"></ul>
           <form>
             <div class="d-flex mt-md-5 mt-4">
