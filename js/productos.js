@@ -59,15 +59,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function setTitle() {
     if (!titleEl) return;
+    const parentSection = titleEl.closest('section');
     if (currentSearch) {
       titleEl.textContent = 'Búsqueda: ' + currentSearch;
       if (descEl) descEl.style.display = 'none';
       if (swiperSection) swiperSection.style.display = 'none';
+      if (parentSection) {
+        parentSection.classList.add('mt-6');
+        parentSection.classList.add('pt-5');
+      }
     } else {
       var d = (MAP && MAP[currentCategory]) ? MAP[currentCategory] : "Productos";
       titleEl.textContent = d;
       if (descEl) descEl.style.display = 'block';
       if (swiperSection) swiperSection.style.display = 'block';
+      if (parentSection) {
+        parentSection.classList.remove('mt-6');
+        parentSection.classList.remove('pt-5');
+      }
     }
   }
 
@@ -276,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function scrollToResults() {
     const target = document.getElementById('titulo-categoria');
     if (target) {
-      const offset = 120; // Original framing offset
+      const offset = 180; // Increased framing offset
       const elementPosition = target.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -309,7 +318,6 @@ document.addEventListener("DOMContentLoaded", function () {
       ALL = resp.products || [];
       MAP = resp.categories || {};
       SUBS_BY_CAT = resp.subcats_by_category || {};
-      rebuildReverse();
       rebuildReverse();
       if (currentSearch) {
         allSubcats = [];

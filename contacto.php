@@ -61,7 +61,7 @@ include_once("_general.php");
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
           <li class="nav-item"><a class="nav-link" href="productos.php">Productos</a></li>
           <li class="nav-item"><a class="nav-link" href="nosotros.php">Nosotros</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://sanitariosmunro.mercadoshops.com.ar/" target="_blank">Mercado Shops</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://www.mercadolibre.com.ar/pagina/sanitariosmunro" target="_blank">MERCADO LIBRE</a></li>
           <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
         </ul>
 
