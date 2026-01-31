@@ -1158,3 +1158,27 @@ a.btn.dropdown-toggle {
 .btn-primary {
     color: #ffffff !important;
 }
+
+@media (max-width: 768px) {
+    .mySwiper .swiper-slide {
+        height: 85vh;
+    }
+
+    .bg-slide-3 {
+        background-position: 65% center;
+    }
+
+    :root {
+        --bg-about-x: 93%;
+        /* Ajustá este valor (0% = izquierda, 100% = derecha, 50% = centro) */
+    }
+
+    .bg-about {
+        height: 50vh;
+        background-position: var(--bg-about-x) top;
+    }
+
+    .bg-about .vh-100 {
+        height: 100% !important;
+    }
+}
