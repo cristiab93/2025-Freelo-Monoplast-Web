@@ -1,6 +1,7 @@
 
 
 $(function () {
+  var v = new Date().getTime();
   var mySwiper = new Swiper(".mySwiper", {
     autoplay: {
       delay: 3000, // Tiempo de espera entre slides (en milisegundos)
@@ -27,7 +28,7 @@ $(function () {
   });
 
   function renderCard(p) {
-    var img = p.image || "img/placeholder.png";
+    var img = (p.image || "img/placeholder.png") + "?v=" + v;
     var name = p.name || "";
     var sub = p.subname || p.subcategory || "";
     var id = p.id || "";
@@ -44,9 +45,9 @@ $(function () {
       '</div>' +
       '<p class="blue mb-0 font12 text-center text-md-start">' + sub + '</p>' +
       '</div>' +
-      '<div class="mt-4 d-md-flex justify-content-center justify-content-md-between gap-2">' +
-      '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-4 py-2 d-flex align-items-center">Ver detalles</a>' +
-      '<button type="button" class="btn btn-primary font11 text-white border-blue rounded-5 px-3 py-2 add-to-budget d-flex align-items-center" style="white-space: nowrap;" data-id="' + p.enc_id + '" data-name="' + name + '" data-subname="' + sub + '" data-img="' + img + '">Agregar al presupuesto</button>' +
+      '<div class="mt-4 d-flex justify-content-between gap-2">' +
+      '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-2 py-2 d-flex align-items-center justify-content-center w-50">Ver detalles</a>' +
+      '<button type="button" class="btn btn-primary font11 text-white border-blue rounded-5 px-1 py-2 add-to-budget d-flex align-items-center justify-content-center w-50" data-id="' + p.enc_id + '" data-name="' + name + '" data-subname="' + sub + '" data-img="' + img + '">Agregar presupuesto</button>' +
       '</div>' +
       '</div>' +
       '</div>';

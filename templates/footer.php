@@ -1,24 +1,26 @@
 <footer class="bg-blue py-5">
     <div class="container">
-      <div class="row">
-        <div class="col-12 col-sm-6 col-lg-4">
-          <img src="img/logo.svg" height="45" class="mb-3">
+      <div class="row align-items-center">
+        <div class="col-12 col-md-4 mb-4 mb-md-0">
+          <img src="img/logo.svg?v=<?php echo time(); ?>" height="45" class="mb-3">
           <p class="white fw-600">Visitanos</p>
           <p class="white"><a class="white" href="https://maps.app.goo.gl/h5R4vcZV46uvUC5k9" target="_blank">Bartolomé
               Mitre 1862, B1604AKZ Florida Oeste, Provincia de Buenos Aires</a></p>
         </div>
-        <div class="col-9 col-sm-6 col-lg-3">
+        <div class="col-12 col-md-4 mb-4 mb-md-0">
           <p class="fw-600 white">Contacto</p>
-          <p class="white">4761-5845 / 4730-4554 <br>
-            11 6135-8093 (solo WhatsApp)<br>
+          <p class="white">4761 5845 / 4730 4554 <br>
+            11 6135 8093 (solo WhatsApp)<br>
             <a class="white" href="mailto:info@monoplast.com.ar">info@monoplast.com.ar</a>
           </p>
 
-          <p class="white">Lun a Vie 8 a 13 / 14 a 17 <br>
-            Sáb 9:00 a 12:00</p>
+          <p class="white">Lun a Vie 08:00 a 13:00 y 14:00 a 17:00 <br>
+            Sáb 09:00 a 12:00</p>
         </div>
-        <div class="col text-lg-end text-start">
-          <div class="instagram ms-lg-auto"><a href="https://www.instagram.com/monoplastsanitarios/?hl=es" target="_blank"><img src="img/instagram.svg" height="20"></a></div>
+        <div class="col-12 col-md-4 d-flex align-items-center justify-content-md-end justify-content-start gap-3">
+          <div class="footer-icon"><a href="mailto:info@monoplast.com.ar"><i class="mdi mdi-email text-white font24"></i></a></div>
+          <div class="footer-icon"><a href="tel:01147615845"><i class="mdi mdi-phone text-white font24"></i></a></div>
+          <div class="footer-icon"><a href="https://www.instagram.com/monoplastsanitarios/?hl=es" target="_blank"><i class="mdi mdi-instagram text-white font24"></i></a></div>
         </div>
       </div>
     </div>
@@ -60,4 +62,4 @@
     <!-- Toasts dynamically generated here -->
   </div>
 
-  <script src="js/cart.js"></script>
+  <script src="js/cart.js?v=<?php echo time(); ?>"></script>

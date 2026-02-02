@@ -4,7 +4,7 @@ include_once("_general.php");
 <?php include_once("templates/head-info.php"); ?>
 </head>
 <body class="bg-blue-light">
-   <a href="https://web.whatsapp.com/send?phone=541161358093" target="_blank">
+   <a href="https://wa.me/5491161358093" target="_blank">
         <div class="wpp-button"><svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                 <path fill="#ffffff"
@@ -100,8 +100,9 @@ include_once("_general.php");
       <h2 class="kento fw-400">CONTACTATE <br>CON NOSOTROS  </h2>
 <p class="text-white font20 mt-3">Envianos tu consulta y en breve nos <br class="d-none d-lg-block">pondremos en contacto.</p>
         <div class="mt-4 text-white">
-          <p class="mb-1"><strong class="uppercase font14">Local:</strong> Av. Mitre 2415, Munro</p>
-          <p class="mb-0"><strong class="uppercase font14">Teléfono:</strong> 011 4756-2345</p>
+          <p class="mb-1"><strong class="uppercase font14">Local:</strong> Bartolomé Mitre 1862, Florida Oeste</p>
+          <p class="mb-0"><strong class="uppercase font14">Teléfonos:</strong> 4761 5845 / 4730 4554</p>
+          <p class="mb-0"><strong class="uppercase font14">WhatsApp:</strong> 11 6135 8093 (solo WhatsApp)</p>
         </div>
       </div>
       <div class="col-10 col-lg-5 mt-4 mt-lg-0">
@@ -136,7 +137,7 @@ include_once("_general.php");
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
   <?php include_once("templates/footer.php"); ?>
-  <script src="js/contacto.js"></script>
+  <script src="js/contacto.js?v=<?php echo time(); ?>"></script>
   <script>
   window.addEventListener('scroll', function () {
   const header = document.getElementById('main-header');

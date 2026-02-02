@@ -54,19 +54,19 @@ body {
     background-position: center top;
     background-repeat: no-repeat;
     height: 100vh;
-    background-image: url(../img/bg-nosotros.jpg);
+    background-image: url(../img/bg-nosotros.jpg?v=20260202);
 }
 
 .bg-slide-1 {
-    background-image: url(../img/bg-slide-1.jpg);
+    background-image: url(../img/bg-slide-1.jpg?v=20260202);
 }
 
 .bg-slide-2 {
-    background-image: url(../img/bg-slide-2.jpg);
+    background-image: url(../img/bg-slide-2.jpg?v=20260202);
 }
 
 .bg-slide-3 {
-    background-image: url(../img/bg-slide-3.jpg);
+    background-image: url(../img/bg-slide-3.jpg?v=20260202);
 }
 
 a.nav-link {
@@ -430,7 +430,7 @@ p {
 }
 
 .bg-blue-about {
-    background-image: url(../img/bg-nosotros.png);
+    background-image: url(../img/bg-nosotros.png?v=20260202);
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -473,7 +473,7 @@ p {
 }
 
 .bg-contacto {
-    background-image: url(../img/bg-contacto.png);
+    background-image: url(../img/bg-contacto.png?v=20260202);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -657,13 +657,25 @@ a.btn.dropdown-toggle {
     color: #606060;
 }
 
-.instagram {
+.footer-icon {
     width: 40px;
     height: 40px;
     background: #4C84C2;
     border-radius: 50%;
     text-align: center;
-    line-height: 37px;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.footer-icon:hover {
+    background: #0A0338;
+}
+
+.font24 {
+    font-size: 24px;
 }
 
 .swiper-button-next,
@@ -1038,6 +1050,12 @@ a.btn.dropdown-toggle {
     }
 
     #mas-buscados .card.bg-grey .btn {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    #grid-productos .card .btn {
         width: 100%;
         justify-content: center;
         margin-bottom: 10px;

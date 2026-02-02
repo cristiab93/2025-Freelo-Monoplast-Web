@@ -1,4 +1,5 @@
 $(function () {
+  var v = new Date().getTime();
   function getParam(name) {
     var url = new URL(window.location.href);
     return url.searchParams.get(name);
@@ -32,7 +33,7 @@ $(function () {
 
   function renderRelacionado(p) {
     var href = 'producto.php?id=' + encodeURIComponent(p.eid || '');
-    var img = p.image || 'uploaded_img/ariston.png';
+    var img = (p.image || 'uploaded_img/ariston.png') + "?v=" + v;
     return '' +
       '<div class="col-12 col-sm-6 col-lg-4 col-xl-3 mt-4">' +
       '<div class="card bg-grey justify-content-between rounded-4 border-0 position-relative px-3 py-4 h-100 d-flex flex-column">' +
@@ -45,9 +46,9 @@ $(function () {
       '</div>' +
       '<p class="blue mb-0 font12 text-center text-md-start">' + (p.subname || '') + '</p>' +
       '</div>' +
-      '<div class="mt-4 d-md-flex justify-content-center justify-content-md-between gap-2">' +
-      '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-4 py-2 d-flex align-items-center">Ver detalles</a>' +
-      '<button type="button" class="btn btn-primary font11 text-white border-blue rounded-5 px-3 py-2 add-to-budget d-flex align-items-center" style="white-space: nowrap;" data-id="' + (p.eid || '') + '" data-name="' + (p.name || '') + '" data-subname="' + (p.subname || '') + '" data-img="' + img + '">Agregar al presupuesto</button>' +
+      '<div class="mt-4 d-flex justify-content-between gap-2">' +
+      '<a href="' + href + '" class="btn btn-outline-dark font11 blue border-blue rounded-5 px-2 py-2 d-flex align-items-center justify-content-center w-50">Ver detalles</a>' +
+      '<button type="button" class="btn btn-primary font11 text-white border-blue rounded-5 px-1 py-2 add-to-budget d-flex align-items-center justify-content-center w-50" data-id="' + (p.eid || '') + '" data-name="' + (p.name || '') + '" data-subname="' + (p.subname || '') + '" data-img="' + img + '">Agregar presupuesto</button>' +
       '</div>' +
       '</div>' +
       '</div>';
@@ -61,7 +62,7 @@ $(function () {
     .done(function (resp) {
       if (!resp || !resp.success || !resp.product) {
         $('#prod-title').text('Producto no encontrado');
-        $('#zoom-img').attr('src', 'uploaded_img/ariston.png');
+        $('#zoom-img').attr('src', 'uploaded_img/ariston.png?v=' + v);
         return;
       }
       var p = resp.product;
@@ -76,7 +77,7 @@ $(function () {
         breadHtml += '<a href="productos.php?cat=' + encodeURIComponent(catKey) + '&subc=' + encodeURIComponent(subcat) + '" class="breadcrumb-link">' + subcat + '</a>';
       }
       $('#prod-breadcrumbs').html(breadHtml);
-      $('#zoom-img').attr('src', p.image || 'uploaded_img/ariston.png');
+      $('#zoom-img').attr('src', (p.image || 'uploaded_img/ariston.png') + "?v=" + v);
       $('#prod-title').text(p.name || '');
       $('#prod-subtitle').text(cleanText(p.subname || ''));
       $('#prod-features').html(renderBullets(p.description || ''));
@@ -88,7 +89,7 @@ $(function () {
     })
     .fail(function () {
       $('#prod-title').text('Error cargando el producto');
-      $('#zoom-img').attr('src', 'uploaded_img/ariston.png');
+      $('#zoom-img').attr('src', 'uploaded_img/ariston.png?v=' + v);
     });
 
   var zoomContainer = document.querySelector('.zoom-container');

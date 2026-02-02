@@ -31,7 +31,7 @@ include_once("_general.php");
     </style>
 </head>
 <body>
-   <a href="https://web.whatsapp.com/send?phone=541161358093" target="_blank">
+   <a href="https://wa.me/5491161358093" target="_blank">
         <div class="wpp-button"><svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                 <path fill="#ffffff"
@@ -44,7 +44,7 @@ include_once("_general.php");
       
       <!-- LOGO -->
       <a class="navbar-brand" href="index.php">
-        <img src="img/logo-color.svg" alt="Monoplast" width="120">
+        <img src="img/logo-color.svg?v=<?php echo time(); ?>" alt="Monoplast" width="120">
       </a>
 
       <!-- ----------------------------------------------------------- -->

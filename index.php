@@ -6,7 +6,7 @@ include_once ("_general.php");
 </head>
 <body>
 
- <a href="https://web.whatsapp.com/send?phone=541161358093" target="_blank">
+ <a href="https://wa.me/5491161358093" target="_blank">
         <div class="wpp-button"><svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                 <path fill="#ffffff"
@@ -21,7 +21,7 @@ include_once ("_general.php");
       
       <!-- LOGO -->
       <a class="navbar-brand" href="index.php">
-        <img src="img/logo.svg" alt="Monoplast" width="120">
+        <img src="img/logo.svg?v=<?php echo time(); ?>" alt="Monoplast" width="120">
       </a>
 
       <!-- ----------------------------------------------------------- -->
@@ -172,19 +172,19 @@ include_once ("_general.php");
           <div class="swiper slideServicios">
             <div class="swiper-wrapper mb-5">
               <div class="swiper-slide text-start">
-                <div class="bg-servicio bg-producto6"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-riego.svg" height="100"></div></div>
+                <div class="bg-servicio bg-producto6"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-riego.svg?v=<?php echo time(); ?>" height="100"></div></div>
                 <div class="pe-5"><h3 class="blue fw-700 mt-3">Instalación de riego <br class="d-none d-lg-block">por aspersión</h3><p class="blue font13 fw-400">Sistemas de riego para canchas de Fútbol, canchas de Golf, Jardines, etc</p></div>
               </div>
               <div class="swiper-slide text-start">
-                <div class="bg-servicio bg-servicio3"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-pileta.svg" height="95"></div></div>
+                <div class="bg-servicio bg-servicio3"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-pileta.svg?v=<?php echo time(); ?>" height="95"></div></div>
                 <div class="pe-5"><h3 class="blue fw-700 mt-3">Construcción de <br>piletas</h3><p class="blue font13 fw-400">Servicio de construcción de piletas, tanto de natación como piletas residenciales.</p></div>
               </div>
               <div class="swiper-slide text-start">
-                <div class="bg-servicio bg-servicio2"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-reparacion.svg" height="95"></div></div>
+                <div class="bg-servicio bg-servicio2"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-reparacion.svg?v=<?php echo time(); ?>" height="95"></div></div>
                 <div class="pe-5"><h3 class="blue fw-700 mt-3">Reparación de <br>bombas y filtros</h3><p class="blue font13 fw-400">Servicio especializado en reparación e instalación de bombas de agua y filtros.</p></div>
               </div>
               <div class="swiper-slide text-start">
-                <div class="bg-servicio bg-servicio4"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-pieza.svg" height="80"></div></div>
+                <div class="bg-servicio bg-servicio4"><div class="d-flex align-items-center justify-content-center h-100 position-absolute w-100 index-9"><img src="img/icono-pieza.svg?v=<?php echo time(); ?>" height="80"></div></div>
                 <div class="pe-5"><h3 class="blue fw-700 mt-3">Piezas <br>especiales</h3><p class="blue font13 fw-400">Se realizan piezas y tubos especiales a medida (de 40mm a 50mm) y en distintos materiales.</p></div>
               </div>
             </div>
@@ -213,7 +213,7 @@ include_once ("_general.php");
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
   <?php include_once ("templates/footer.php") ?>
-  <script src="js/index.js"></script>
+  <script src="js/index.js?v=<?php echo time(); ?>"></script>
 
 
 
