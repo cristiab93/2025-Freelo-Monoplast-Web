@@ -59,8 +59,7 @@ $(function () {
         })
             .done(function (resp) {
                 if (resp && resp.success) {
-                    alert(resp.message || 'Tu mensaje se envió con éxito.');
-                    $form[0].reset();
+                    window.location.href = 'gracias.php';
                 } else {
                     alert(resp.message || 'Hubo un error al enviar el mensaje.');
                 }

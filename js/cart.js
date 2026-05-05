@@ -217,15 +217,7 @@ document.addEventListener('submit', function (e) {
                 responseDiv.textContent = resp;
                 if (resp.includes('enviado')) {
                     refreshCartUI();
-                    setTimeout(() => {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('budgetModal'));
-                        if (modal) modal.hide();
-                        e.target.reset();
-                        responseDiv.style.display = 'none';
-                        // Close offcanvas too
-                        const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasWithBothOptions'));
-                        if (offcanvas) offcanvas.hide();
-                    }, 2000);
+                    window.location.href = 'gracias.php';
                 }
             },
             error: function () {

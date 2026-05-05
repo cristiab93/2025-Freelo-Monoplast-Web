@@ -11,10 +11,10 @@ if($_SERVER['HTTP_HOST'] == 'localhost:82' || $_SERVER['HTTP_HOST'] == 'localhos
 }
 else
 {
-    define("DBSERVERNAME", "sql308.infinityfree.com");
-	define("DBUSERNAME", "if0_41017142");
+    define("DBSERVERNAME", "167.250.5.72");
+	define("DBUSERNAME", "nkkmijbj_cris");
 	define("DBPASSWORD", "0112358Cris");
-	define("DBNAME", "if0_41017142_testing");
+	define("DBNAME", "nkkmijbj_monoplast_v2");
 	define("DEPURAR", 0);
-	define("BASEURL", "https://testing2026.infinityfree.me/");
+	define("BASEURL", "https://monoplast.com.ar/");
 }

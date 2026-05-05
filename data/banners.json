@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Llegó la\r\ntemporada de pileta",
+        "image_url": "img/bg-slide-1.jpg",
+        "button_text": "Ver productos",
+        "button_url": "productos.php?cat=piletas"
+    },
+    {
+        "title": "Más de 40 años\r\nacompañando\r\n tus obras",
+        "image_url": "img/bg-slide-2.jpg",
+        "button_text": "Conocé más",
+        "button_url": "nosotros.php"
+    },
+    {
+        "title": "Conseguí\r\ntu mampara",
+        "image_url": "img/bg-slide-3.jpg",
+        "button_text": "Ver productos",
+        "button_url": "productos.php?cat=artefactos"
+    }
+]

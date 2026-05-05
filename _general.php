@@ -3,6 +3,44 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+/**
+ * Google Tag Manager Injection
+ * ID: GTM-N4T3GNPG
+ */
+function inject_gtm_buffer($buffer) {
+    global $PAGE;
+    
+    // Evitar inyección en páginas de administración
+    $is_admin = (isset($PAGE) && strncmp($PAGE, 'admin-', 6) === 0);
+    if ($is_admin) {
+        return $buffer;
+    }
+
+    $gtm_id = 'GTM-N4T3GNPG';
+
+    $gtm_head = "<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','" . $gtm_id . "');</script>
+<!-- End Google Tag Manager -->";
+
+    $gtm_body = "<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=" . $gtm_id . "\"
+height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->";
+
+    // Inyectar en <head> (después de la apertura)
+    $buffer = preg_replace('/<head>/i', "<head>\n" . $gtm_head, $buffer);
+    
+    // Inyectar después de <body> (incluyendo posibles atributos)
+    $buffer = preg_replace('/<body([^>]*)>/i', "<body$1>\n" . $gtm_body, $buffer);
+
+    return $buffer;
+}
+ob_start("inject_gtm_buffer");
+
 require_once("conn/cfg.php");
 require_once("conn/sql_latest.php");
 require_once("conn/functions.php");
@@ -58,6 +96,12 @@ function ShowAdminNavBar($selected)
             <span class="nav-text">Más buscados</span>
           </a>
         </li>
+        <li>
+          <a id="nav-banners" href="banners.php">
+            <i class="fa fa-images fa-2x"></i>
+            <span class="nav-text">Banners</span>
+          </a>
+        </li>
       </ul>
 
       <ul class="logout">
@@ -81,7 +125,90 @@ function ShowAdminNavBar($selected)
     ';
 }
 
+function banners_json_path()
+{
+    return __DIR__ . '/data/banners.json';
+}
 
+function default_home_banners()
+{
+    return [
+        [
+            'title' => "Llegó la\ntemporada de pileta",
+            'image_url' => 'img/bg-slide-1.jpg',
+            'button_text' => 'Ver productos',
+            'button_url' => 'productos.php?cat=piletas',
+        ],
+        [
+            'title' => "Más de 40 años\nacompañando\n tus obras",
+            'image_url' => 'img/bg-slide-2.jpg',
+            'button_text' => 'Conocé más',
+            'button_url' => 'nosotros.php',
+        ],
+        [
+            'title' => "Conseguí\ntu mampara",
+            'image_url' => 'img/bg-slide-3.jpg',
+            'button_text' => 'Ver productos',
+            'button_url' => 'productos.php?cat=artefactos',
+        ],
+    ];
+}
+
+function normalize_home_banner($banner)
+{
+    return [
+        'title' => trim((string)($banner['title'] ?? '')),
+        'image_url' => trim((string)($banner['image_url'] ?? '')),
+        'button_text' => trim((string)($banner['button_text'] ?? '')),
+        'button_url' => trim((string)($banner['button_url'] ?? '')),
+    ];
+}
+
+function load_home_banners($use_defaults = true)
+{
+    $path = banners_json_path();
+    if (!file_exists($path) || trim((string)file_get_contents($path)) === '') {
+        return $use_defaults ? default_home_banners() : [];
+    }
+
+    $decoded = json_decode((string)file_get_contents($path), true);
+    if (!is_array($decoded)) {
+        return $use_defaults ? default_home_banners() : [];
+    }
+
+    $banners = [];
+    foreach ($decoded as $banner) {
+        if (!is_array($banner)) continue;
+        $normalized = normalize_home_banner($banner);
+        if ($normalized['title'] === '' && $normalized['image_url'] === '') continue;
+        $banners[] = $normalized;
+    }
+
+    if (!$banners && $use_defaults) {
+        return default_home_banners();
+    }
+
+    return $banners;
+}
+
+function save_home_banners($banners)
+{
+    $path = banners_json_path();
+    $dir = dirname($path);
+    if (!is_dir($dir)) {
+        mkdir($dir, 0775, true);
+    }
+
+    $clean = [];
+    foreach ($banners as $banner) {
+        if (!is_array($banner)) continue;
+        $normalized = normalize_home_banner($banner);
+        if ($normalized['title'] === '' && $normalized['image_url'] === '') continue;
+        $clean[] = $normalized;
+    }
+
+    return file_put_contents($path, json_encode($clean, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX) !== false;
+}
 
 if (!isset($PAGE)) {
     $PAGE = '';

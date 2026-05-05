@@ -1,5 +1,7 @@
 <?php
+
 include_once ("_general.php");
+$home_banners = load_home_banners();
 ?>
 <?php include_once ("templates/head-info.php"); ?>
 
@@ -101,24 +103,22 @@ include_once ("_general.php");
   <section>
     <div class="swiper mySwiper">
       <div class="swiper-wrapper">
-        <div class="swiper-slide bg-slide-1">
-          <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
-            <h1 class="mb-0 kento">Llegó la <br>temporada de pileta</h1>
-            <a href="productos.php?cat=piletas" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4">Ver productos</a>
+        <?php foreach ($home_banners as $banner): ?>
+          <?php
+            $banner_title = htmlspecialchars($banner['title'] ?? '', ENT_QUOTES, 'UTF-8');
+            $banner_image = htmlspecialchars($banner['image_url'] ?? '', ENT_QUOTES, 'UTF-8');
+            $banner_button = htmlspecialchars($banner['button_text'] ?? '', ENT_QUOTES, 'UTF-8');
+            $banner_url = htmlspecialchars($banner['button_url'] ?? '#', ENT_QUOTES, 'UTF-8');
+          ?>
+          <div class="swiper-slide" style="background-image: url('<?= $banner_image ?>');">
+            <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
+              <h1 class="mb-0 kento"><?= nl2br($banner_title) ?></h1>
+              <?php if ($banner_button !== ''): ?>
+                <a href="<?= $banner_url ?>" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4"><?= $banner_button ?></a>
+              <?php endif; ?>
+            </div>
           </div>
-        </div>
-        <div class="swiper-slide bg-slide-2">
-          <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
-            <h1 class="mb-0 kento">Más de 40 años <br>acompañando <br> tus obras</h1>
-            <a href="nosotros.php" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4">Conocé más</a>
-          </div>
-        </div>
-        <div class="swiper-slide bg-slide-3">
-          <div class="content container h-100 d-flex flex-column align-items-start justify-content-center text-start">
-            <h1 class="mb-0 kento">Conseguí <br>tu mampara</h1>
-            <a href="productos.php?cat=artefactos" class="btn btn-primary font14 text-white border-blue rounded-5 px-4 py-2 mt-4">Ver productos</a>
-          </div>
-        </div>
+        <?php endforeach; ?>
       </div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>

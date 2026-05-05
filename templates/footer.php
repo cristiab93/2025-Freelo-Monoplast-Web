@@ -4,7 +4,7 @@
         <div class="col-12 col-md-4 mb-4 mb-md-0">
           <img src="img/logo.svg?v=<?php echo time(); ?>" height="45" class="mb-3">
           <p class="white fw-600">Visitanos</p>
-          <p class="white"><a class="white" href="https://maps.app.goo.gl/h5R4vcZV46uvUC5k9" target="_blank">Bartolomé
+          <p class="white"><a class="white" href="https://maps.app.goo.gl/h5R4vcZV46uvUC5k9" target="_blank">Avenida Bartolomé
               Mitre 1862, B1604AKZ Florida Oeste, Provincia de Buenos Aires</a></p>
         </div>
         <div class="col-12 col-md-4 mb-4 mb-md-0">
